@@ -156,62 +156,6 @@ export default function MainDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Recent (밝은 카드) */}
-        <aside
-          className="recent"
-          style={{
-            backgroundColor: "#ffffff",
-            border: `1px solid ${line}`,
-            borderRadius: 16,
-            padding: 16,
-            color: textDark,
-          }}
-        >
-          <div className="recent-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-            <h3 style={{ margin: 0 }}>Recent activities</h3>
-            <button
-              className="ghost"
-              style={{
-                background: "transparent",
-                border: `1px solid ${line}`,
-                color: textMuted,
-                borderRadius: 10,
-                padding: "6px 10px",
-                cursor: "pointer",
-              }}
-            >
-              See all →
-            </button>
-          </div>
-          <ul className="recent-list" style={{ display: "flex", flexDirection: "column", gap: 12, margin: 0, padding: 0, listStyle: "none" }}>
-            <li style={{ display: "grid", gridTemplateColumns: "32px 1fr auto", gap: 12, alignItems: "center" }}>
-              <div className="mini-avatar" style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#ef4444,#f97316)" }} />
-              <div className="recent-body">
-                <p style={{ margin: 0 }}>
-                  Teacher Mr Lopez left a feedback on a <b>“Reflective essay on self”</b>
-                </p>
-                <small style={{ color: textMuted }}>10:00 | 19/07/2023</small>
-              </div>
-              <a className="link" href="#" style={{ color: "#60a5fa", textDecoration: "none" }}>
-                Read it
-              </a>
-            </li>
-
-            <li style={{ display: "grid", gridTemplateColumns: "32px 1fr auto", gap: 12, alignItems: "center" }}>
-              <div className="mini-avatar" style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#ef4444,#f97316)" }} />
-              <div className="recent-body">
-                <p style={{ margin: 0 }}>
-                  Teacher Ms Lynn left a feedback on a <b>“Behavioural report”</b>
-                </p>
-                <small style={{ color: textMuted }}>16:00 | 18/07/2023</small>
-              </div>
-              <a className="link" href="#" style={{ color: "#60a5fa", textDecoration: "none" }}>
-                Read it
-              </a>
-            </li>
-          </ul>
-        </aside>
       </section>
 
       {/* Grid (배치 자체는 기존 클래스 사용) */}
