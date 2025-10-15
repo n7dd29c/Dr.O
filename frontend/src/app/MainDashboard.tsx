@@ -2,6 +2,42 @@
 "use client";
 import React, { useState } from "react";
 
+function SplitBar({ pos }: { pos: number }) {
+  const p = Math.max(0, Math.min(1, pos));
+  const split = p * 100;          // 분할 지점(%) — 왼쪽=긍정 끝나는 지점
+  const blend = 3;                 // 경계에서 섞이는 폭(%) — 4~10 사이에서 취향대로 조절
+  const a = Math.max(0, split - blend / 2);
+  const b = Math.min(100, split + blend / 2);
+
+  // 단일 gradient: 좌측(녹→청) → 경계(a~b)에서 청→주/빨을 부드럽게 섞기 → 우측(주→빨)
+  const bg = `linear-gradient(
+    90deg,
+    #60a5fa 0%,
+    #60a5fa ${a}%,
+    #ef4444 ${b}%,
+    #ef4444 100%
+  )`;
+
+  return (
+    <div
+      style={{
+        height: 10,
+        borderRadius: 999,
+        background: bg,
+        // 바탕을 살짝 깔아주면 양 끝이 더 또렷합니다.
+        boxShadow: "inset 0 0 0 1px #e5e7eb",
+        overflow: "hidden",
+      }}
+    />
+  );
+}
+
+const rows = [
+  { s: "1", sales: 4.3, rating: 4.3, pos: 0.78 }, // pos = 긍정 비율(0~1)
+  { s: "2", sales: 4.9, rating: 4.9, pos: 0.62 },
+  { s: "3", sales: 4.0, rating: 4.0, pos: 0.35 },
+];
+
 export default function MainDashboard() {
   // ✅ 페이지/탑바 배경색을 상태로 관리 (컬러피커로 즉시 변경)
   const [pageBg, setPageBg] = useState("#ffffff");   // 페이지 전체 배경
@@ -43,19 +79,19 @@ export default function MainDashboard() {
 
         <nav className="nav" style={{ flex: 1, display: "flex", justifyContent: "center", gap: 18 }}>
           <a className="active" href="#" style={{ color: onTopbarText, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
-            Dashboard
+            대시보드
           </a>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
-            Materials
+            고객관리
           </a>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
-            Classes
+            전체리뷰관리
           </a>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
-            Inbox
+            Dr.O AI
           </a>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
-            Settings
+            고객 히스토리
           </a>
         </nav>
 
@@ -106,8 +142,8 @@ export default function MainDashboard() {
         }}
       >
         <div>
-          <h1 style={{ margin: "0 0 6px 0", fontSize: 36, lineHeight: 1.15, color: onTopbarText }}>Hello, Mary!</h1>
-          <p style={{ margin: 0, color: onTopbarMuted, fontSize: 14 }}>Let's jump into your learning experience</p>
+          <h1 style={{ margin: "0 0 10px 0", fontWeight: 510,fontSize: 40, lineHeight: 1.15, color: onTopbarText }}>안녕하세요, 태영님!</h1>
+          <p style={{ margin: 0, color: onTopbarMuted, fontSize: 14 }}>그동안의 지난 기록들을 확인해보세요.</p>
 
           <div className="meta" style={{ display: "flex", gap: 12, marginTop: 18, flexWrap: "wrap" }}>
             <div
@@ -123,7 +159,7 @@ export default function MainDashboard() {
                 color: "#d1d5db",
               }}
             >
-              <span>★</span> <b>4.1</b> Average rate
+              <span>★</span> <b>4.1</b> 평균 별점
             </div>
             <div
               className="pill"
@@ -138,7 +174,7 @@ export default function MainDashboard() {
                 color: "#d1d5db",
               }}
             >
-              <span>🗓</span> <b>76%</b> Attendance rate
+              <span>🗓</span> <b>76%</b> 만족도 비율
             </div>
             <div
               className="pill"
@@ -153,7 +189,22 @@ export default function MainDashboard() {
                 color: "#d1d5db",
               }}
             >
-              <span>🎯</span> <b>24</b> Lessons completed
+              <span>👍🏻</span> <b>2549</b> 누적 긍정 리뷰
+            </div>
+            <div
+              className="pill"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: onTopbarChipBg,
+                border: `1px solid ${onTopbarBorder}`,
+                borderRadius: 999,
+                padding: "8px 12px",
+                color: "#dbd1d2ff",
+              }}
+            >
+              <span>👎🏻</span> <b>633</b> 누적 부정 리뷰
             </div>
           </div>
         </div>
@@ -344,37 +395,48 @@ export default function MainDashboard() {
         {/* Grades (wide) */}
         <section className="card wide" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gridColumn: "1 / span 2" }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}>Grades</h3>
+            <h3 style={{ margin: 0 }}>이번 주 평균 별점</h3>
             <span className="avg" style={{ color: textMuted }}>
-              <b>4.1</b> Average grade
+              <b>4.7</b> 점
             </span>
           </div>
           <table className="table" style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
-                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Subject</th>
-                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Grade</th>
-                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Progress</th>
-                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Lessons</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>제품명</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>판매량</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>별점</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>긍정</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "right" }}>부정</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                { s: "Human Behaviour", g: 4.3, p: 0.65, l: 37 },
-                { s: "Cognitive Psychology", g: 4.9, p: 0.8, l: 30 },
-                { s: "Social Psychology", g: 4.0, p: 0.5, l: 15 },
-              ].map((row) => (
-                <tr key={row.s}>
-                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.s}</td>
-                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.g.toFixed(1)}</td>
-                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>
-                    <div className="prog" style={{ height: 8, background: "#1b2128", borderRadius: 999, overflow: "hidden" }}>
-                      <span style={{ display: "block", height: "100%", width: `${row.p * 100}%`, background: "linear-gradient(90deg,#8b5cf6,#60a5fa)" }} />
-                    </div>
-                  </td>
-                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.l}</td>
-                </tr>
-              ))}
+              {rows.map((row) => {
+                const neg = 1 - row.pos;
+                return (
+                  <tr key={row.s}>
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.s}</td>
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.sales.toFixed(1)}</td>
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.rating.toFixed(1)}</td>
+
+                    {/* ✅ 긍정/부정 스플릿 바 (왼쪽=긍정, 오른쪽=부정) */}
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10, minWidth: 420 }}>
+                      <div style={{ display: "grid", gap: 6 }}>
+                        <SplitBar pos={row.pos} />
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#6b7280" }}>
+                          <span>긍정 {Math.round(row.pos * 100)}%</span>
+                          <span>부정 {Math.round((1 - row.pos) * 100)}%</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* 부정 수치(선택) — 필요 없으면 이 칸 통째로 삭제 가능 */}
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "right" }}>
+                      {Math.round(neg * 100)}%
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </section>
