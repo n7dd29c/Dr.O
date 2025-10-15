@@ -3,3 +3,5 @@
 dist/
 .DS_Store
 edtrack/public/
+node_modules
+node_modules

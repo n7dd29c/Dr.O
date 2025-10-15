@@ -11,7 +11,7 @@ export default function MainDashboard() {
     <div className="wrap">
       {/* Top Bar */}
       <header className="topbar">
-        <div className="brand">EdTrack</div>
+        <div className="brand">Dr.O</div>
         <nav className="nav">
           <a className="active" href="#">Dashboard</a>
           <a href="#">Materials</a>
@@ -66,7 +66,7 @@ export default function MainDashboard() {
       {/* Grid */}
       <main className="grid">
         {/* Task progress */}
-        <section className="card">
+        <section className="card row1">
           <div className="card-head">
             <h3>Task progress</h3>
             <span className="badge">This week</span>
@@ -94,7 +94,7 @@ export default function MainDashboard() {
         </section>
 
         {/* Assignments */}
-        <section className="card">
+        <section className="card row1">
           <div className="card-head">
             <h3>Assignments</h3>
             <button className="ghost">See all →</button>
@@ -129,7 +129,7 @@ export default function MainDashboard() {
         </section>
 
         {/* Attendance */}
-        <section className="card">
+        <section className="card row1">
           <div className="card-head">
             <h3>Attendance</h3>
             <span className="badge">This week</span>
@@ -215,21 +215,23 @@ export default function MainDashboard() {
           --radius:16px;
         }
         *{box-sizing:border-box}
-        body,html,#root{height:100%}
-        .wrap{min-height:100vh;background:linear-gradient(180deg,#0f1316, #0f1316 180px,#0f1316 0);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
-        .topbar{height:72px;display:flex;align-items:center;gap:24px;padding:0 24px;border-bottom:1px solid var(--line);background:#0f1316;position:sticky;top:0;z-index:20}
-        .brand{font-weight:700;letter-spacing:0.2px}
-        .nav{display:flex;gap:18px}
-        .nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:10px}
+        html,body,#root{height:100%}
+        .wrap{min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
+        /* Topbar: 하나의 컬러로 통일 & 중앙 탭 정렬 */
+        .topbar{height:72px;display:flex;align-items:center;gap:24px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:20}
+        .brand{font-weight:700;letter-spacing:0.2px;min-width:72px}
+        .nav{flex:1;display:flex;justify-content:center;gap:18px}
+        .nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px}
         .nav a.active,.nav a:hover{background:var(--bg-2);color:var(--text)}
-        .actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+        .actions{min-width:120px;display:flex;justify-content:flex-end;align-items:center;gap:12px}
         .icon{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:8px 10px;cursor:pointer}
         .avatar{width:32px;height:32px;background:linear-gradient(135deg,#64748b,#0ea5e9);border-radius:50%}
 
+        /* Greeting: 타이틀 크게 */
         .greet{display:grid;grid-template-columns:1fr 420px;gap:24px;padding:24px}
-        .greet h1{margin:0 0 6px 0}
-        .greet p{margin:0;color:var(--muted)}
-        .meta{display:flex;gap:12px;margin-top:18px}
+        .greet h1{margin:0 0 6px 0;font-size:36px;line-height:1.15}
+        .greet p{margin:0;color:var(--muted);font-size:14px}
+        .meta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
         .pill{display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted)}
         .recent{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
         .recent-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -239,16 +241,18 @@ export default function MainDashboard() {
         .link{color:var(--blue);text-decoration:none}
         .ghost{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:6px 10px;cursor:pointer}
 
-        .grid{display:grid;gap:24px;grid-template-columns:1.2fr 1fr 1fr;align-items:start;padding:0 24px 36px}
-        .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+        /* Grid: 첫 줄 카드 높이 통일 */
+        .grid{display:grid;gap:24px;grid-template-columns:1.2fr 1fr 1fr;align-items:stretch;padding:0 24px 36px}
+        .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column}
         .card.wide{grid-column:1 / span 2}
+        .row1{min-height:260px}
         .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
         .badge{background:var(--bg-3);border:1px solid var(--line);border-radius:999px;color:var(--muted);padding:4px 8px;font-size:12px}
         .avg{color:var(--muted)}
 
         .bars{display:flex;align-items:end;gap:12px;height:160px;padding:8px 0}
         .bar{display:flex;flex-direction:column;align-items:center;gap:8px}
-        .bar-fill{width:16px;border-radius:6px;background:linear-gradient(180deg,var(--primary-2),var(--primary))}
+        .bar-fill{width:18px;border-radius:8px;background:linear-gradient(180deg,var(--primary-2),var(--primary))}
         .bar-label{color:var(--muted);font-size:12px}
         .legend{display:flex;gap:18px;color:var(--muted);font-size:13px;margin-top:8px}
         .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:var(--bg-3);border:1px solid var(--line)}
@@ -266,7 +270,7 @@ export default function MainDashboard() {
         .btn{background:var(--blue);color:#0b1220;border:none;border-radius:8px;padding:8px 12px;cursor:pointer}
         .btn.sm{padding:6px 10px}
 
-        .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+        .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;flex:1}
         .cal{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;color:var(--muted)}
         .cal.on{outline:2px solid var(--green);color:#d1fae5}
         .cal.off{outline:2px solid var(--line)}
@@ -290,6 +294,7 @@ export default function MainDashboard() {
           .greet{grid-template-columns:1fr}
           .grid{grid-template-columns:1fr}
           .card.wide{grid-column:auto}
+          .row1{min-height:220px}
         }
       `}</style>
     </div>
