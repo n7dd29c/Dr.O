@@ -1,183 +1,433 @@
-import React from "react";
+// app/MainDashboard.tsx
+"use client";
+import React, { useState } from "react";
 
-/**
- * MainDashboard
- * - 추가 라이브러리 없이 node_modules 그대로 사용 가능한 단일 파일 대시보드
- * - 구조만 먼저 확정 → 이후 실제 데이터/차트 라이브러리 연결 예정
- * - Next.js: app/page.tsx 혹은 pages/index.tsx에 넣어도 되고, CRA/Vite: src/App.tsx 대체 가능
- */
 export default function MainDashboard() {
+  // ✅ 페이지/탑바 배경색을 상태로 관리 (컬러피커로 즉시 변경)
+  const [pageBg, setPageBg] = useState("#ffffff");   // 페이지 전체 배경
+  const [topbarBg, setTopbarBg] = useState("#000000"); // 탑바 + 그리팅 배경
+
+  // 공통 색상 팔레트 (필요 시 조정)
+  const textDark = "#0b1220";                 // 밝은 배경에서 본문 텍스트
+  const textMuted = "#6b7280";                // 보조 텍스트
+  const line = "#e5e7eb";                     // 라인
+  const blue = "#2563EB";
+
+  // 탑바/그리팅(어두운 배경)용
+  const onTopbarText = "#ffffff";
+  const onTopbarMuted = "rgba(255,255,255,.7)";
+  const onTopbarBorder = "rgba(255,255,255,.12)";
+  const onTopbarChipBg = "rgba(255,255,255,.08)";
+
   return (
-    <div className="wrap">
+    <div className="wrap" style={{ minHeight: "100vh", backgroundColor: pageBg, color: textDark, fontFamily: "Inter,system-ui,Arial,sans-serif" }}>
       {/* Top Bar */}
-      <header className="topbar">
-        <div className="brand">Dr.O</div>
-        <nav className="nav">
-          <a className="active" href="#">Dashboard</a>
-          <a href="#">Materials</a>
-          <a href="#">Classes</a>
-          <a href="#">Inbox</a>
-          <a href="#">Settings</a>
+      <header
+        className="topbar"
+        style={{
+          height: 72,
+          display: "flex",
+          alignItems: "center",
+          gap: 24,
+          padding: "0 24px",
+          // 헤더 밑 흰줄 제거: borderBottom 미적용
+          backgroundColor: topbarBg,
+          position: "sticky",
+          top: 0,
+          zIndex: 20,
+        }}
+      >
+        <div className="brand" style={{ fontWeight: 700, fontSize: 40, color: onTopbarText, letterSpacing: 0.2, minWidth: 72 }}>
+          Dr.O
+        </div>
+
+        <nav className="nav" style={{ flex: 1, display: "flex", justifyContent: "center", gap: 18 }}>
+          <a className="active" href="#" style={{ color: onTopbarText, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            Dashboard
+          </a>
+          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            Materials
+          </a>
+          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            Classes
+          </a>
+          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            Inbox
+          </a>
+          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            Settings
+          </a>
         </nav>
-        <div className="actions">
-          <button className="icon" aria-label="search">🔍</button>
-          <button className="icon" aria-label="notifications">🔔</button>
-          <div className="avatar" aria-label="profile" />
+
+        <div className="actions" style={{ minWidth: 120, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
+          <button
+            className="icon"
+            aria-label="search"
+            style={{
+              background: onTopbarChipBg,
+              border: `1px solid ${onTopbarBorder}`,
+              borderRadius: 12,
+              color: onTopbarText,
+              padding: "8px 10px",
+              cursor: "pointer",
+            }}
+          >
+            🔍
+          </button>
+          <button
+            className="icon"
+            aria-label="notifications"
+            style={{
+              background: onTopbarChipBg,
+              border: `1px solid ${onTopbarBorder}`,
+              borderRadius: 12,
+              color: onTopbarText,
+              padding: "8px 10px",
+              cursor: "pointer",
+            }}
+          >
+            🔔
+          </button>
+          <div className="avatar" aria-label="profile" style={{ width: 32, height: 32, background: "linear-gradient(135deg,#64748b,#0ea5e9)", borderRadius: "50%" }} />
         </div>
       </header>
 
-      {/* Greeting */}
-      <section className="greet">
+      {/* Greeting (탑바와 동일 배경) */}
+      <section
+        className="greet"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 420px",
+          gap: 24,
+          padding: 24,
+          backgroundColor: topbarBg,
+          color: onTopbarText,
+        }}
+      >
         <div>
-          <h1>Hello, Mary!</h1>
-          <p>Let's jump into your learning experience</p>
-          <div className="meta">
-            <div className="pill"><span>★</span> <b>4.1</b> Average rate</div>
-            <div className="pill"><span>🗓</span> <b>76%</b> Attendance rate</div>
-            <div className="pill"><span>🎯</span> <b>24</b> Lessons completed</div>
+          <h1 style={{ margin: "0 0 6px 0", fontSize: 36, lineHeight: 1.15, color: onTopbarText }}>Hello, Mary!</h1>
+          <p style={{ margin: 0, color: onTopbarMuted, fontSize: 14 }}>Let's jump into your learning experience</p>
+
+          <div className="meta" style={{ display: "flex", gap: 12, marginTop: 18, flexWrap: "wrap" }}>
+            <div
+              className="pill"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: onTopbarChipBg,
+                border: `1px solid ${onTopbarBorder}`,
+                borderRadius: 999,
+                padding: "8px 12px",
+                color: "#d1d5db",
+              }}
+            >
+              <span>★</span> <b>4.1</b> Average rate
+            </div>
+            <div
+              className="pill"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: onTopbarChipBg,
+                border: `1px solid ${onTopbarBorder}`,
+                borderRadius: 999,
+                padding: "8px 12px",
+                color: "#d1d5db",
+              }}
+            >
+              <span>🗓</span> <b>76%</b> Attendance rate
+            </div>
+            <div
+              className="pill"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: onTopbarChipBg,
+                border: `1px solid ${onTopbarBorder}`,
+                borderRadius: 999,
+                padding: "8px 12px",
+                color: "#d1d5db",
+              }}
+            >
+              <span>🎯</span> <b>24</b> Lessons completed
+            </div>
           </div>
         </div>
-        <aside className="recent">
-          <div className="recent-head">
-            <h3>Recent activities</h3>
-            <button className="ghost">See all →</button>
+
+        {/* Recent (밝은 카드) */}
+        <aside
+          className="recent"
+          style={{
+            backgroundColor: "#ffffff",
+            border: `1px solid ${line}`,
+            borderRadius: 16,
+            padding: 16,
+            color: textDark,
+          }}
+        >
+          <div className="recent-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <h3 style={{ margin: 0 }}>Recent activities</h3>
+            <button
+              className="ghost"
+              style={{
+                background: "transparent",
+                border: `1px solid ${line}`,
+                color: textMuted,
+                borderRadius: 10,
+                padding: "6px 10px",
+                cursor: "pointer",
+              }}
+            >
+              See all →
+            </button>
           </div>
-          <ul className="recent-list">
-            <li>
-              <div className="mini-avatar"/>
+          <ul className="recent-list" style={{ display: "flex", flexDirection: "column", gap: 12, margin: 0, padding: 0, listStyle: "none" }}>
+            <li style={{ display: "grid", gridTemplateColumns: "32px 1fr auto", gap: 12, alignItems: "center" }}>
+              <div className="mini-avatar" style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#ef4444,#f97316)" }} />
               <div className="recent-body">
-                <p>Teacher Mr Lopez left a feedback on a <b>“Reflective essay on self”</b></p>
-                <small>10:00 | 19/07/2023</small>
+                <p style={{ margin: 0 }}>
+                  Teacher Mr Lopez left a feedback on a <b>“Reflective essay on self”</b>
+                </p>
+                <small style={{ color: textMuted }}>10:00 | 19/07/2023</small>
               </div>
-              <a className="link" href="#">Read it</a>
+              <a className="link" href="#" style={{ color: "#60a5fa", textDecoration: "none" }}>
+                Read it
+              </a>
             </li>
-            <li>
-              <div className="mini-avatar"/>
+
+            <li style={{ display: "grid", gridTemplateColumns: "32px 1fr auto", gap: 12, alignItems: "center" }}>
+              <div className="mini-avatar" style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#ef4444,#f97316)" }} />
               <div className="recent-body">
-                <p>Teacher Ms Lynn left a feedback on a <b>“Behavioural report”</b></p>
-                <small>16:00 | 18/07/2023</small>
+                <p style={{ margin: 0 }}>
+                  Teacher Ms Lynn left a feedback on a <b>“Behavioural report”</b>
+                </p>
+                <small style={{ color: textMuted }}>16:00 | 18/07/2023</small>
               </div>
-              <a className="link" href="#">Read it</a>
+              <a className="link" href="#" style={{ color: "#60a5fa", textDecoration: "none" }}>
+                Read it
+              </a>
             </li>
           </ul>
         </aside>
       </section>
 
-      {/* Grid */}
-      <main className="grid">
+      {/* Grid (배치 자체는 기존 클래스 사용) */}
+      <main className="grid" style={{ display: "grid", gap: 24, gridTemplateColumns: "1.2fr 1fr 1fr", alignItems: "stretch", padding: "0 24px 36px" }}>
         {/* Task progress */}
-        <section className="card row1">
-          <div className="card-head">
-            <h3>Task progress</h3>
-            <span className="badge">This week</span>
+        <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
+          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}>Task progress</h3>
+            <span className="badge" style={{ background: "#1b2128", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
+              This week
+            </span>
           </div>
-          <div className="bars">
+
+          <div className="bars" style={{ display: "flex", alignItems: "flex-end", gap: 12, height: 160, padding: "8px 0" }}>
             {[
-              {label: "Sat", v: 12},
-              {label: "Sun", v: 18},
-              {label: "Mon", v: 8},
-              {label: "Tue", v: 6},
-              {label: "Wed", v: 10},
-              {label: "Thu", v: 17},
-              {label: "Fri", v: 14},
+              { label: "Sat", v: 12 },
+              { label: "Sun", v: 18 },
+              { label: "Mon", v: 8 },
+              { label: "Tue", v: 6 },
+              { label: "Wed", v: 10 },
+              { label: "Thu", v: 17 },
+              { label: "Fri", v: 14 },
             ].map((d) => (
-              <div key={d.label} className="bar">
-                <div className="bar-fill" style={{height: `${d.v * 6}px`}} />
-                <span className="bar-label">{d.label}</span>
+              <div key={d.label} className="bar" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div className="bar-fill" style={{ width: 18, height: d.v * 6, borderRadius: 8, background: "linear-gradient(180deg,#a78bfa,#8b5cf6)" }} />
+                <span className="bar-label" style={{ color: textMuted, fontSize: 12 }}>
+                  {d.label}
+                </span>
               </div>
             ))}
           </div>
-          <div className="legend">
-            <span className="dot complete"/> Complete
-            <span className="dot pending"/> Pending
+
+          <div className="legend" style={{ display: "flex", gap: 18, color: textMuted, fontSize: 13, marginTop: 8 }}>
+            <span className="dot complete" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#8b5cf6", border: `1px solid ${line}` }} />
+            Complete
+            <span className="dot pending" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#324055", border: `1px solid ${line}` }} />
+            Pending
           </div>
         </section>
 
         {/* Assignments */}
-        <section className="card row1">
-          <div className="card-head">
-            <h3>Assignments</h3>
-            <button className="ghost">See all →</button>
+        <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
+          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}>Assignments</h3>
+            <button
+              className="ghost"
+              style={{
+                background: "transparent",
+                border: `1px solid ${line}`,
+                color: textMuted,
+                borderRadius: 10,
+                padding: "6px 10px",
+                cursor: "pointer",
+              }}
+            >
+              See all →
+            </button>
           </div>
-          <ul className="tasks">
-            <li className="task done">
-              <input type="checkbox" defaultChecked aria-label="done"/>
+          <ul className="tasks" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <li
+              className="task done"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "20px 1fr auto",
+                gap: 12,
+                alignItems: "center",
+                background: "#f3f4f6",
+                border: `1px solid ${line}`,
+                padding: 10,
+                borderRadius: 12,
+                opacity: 0.75,
+              }}
+            >
+              <input type="checkbox" defaultChecked aria-label="done" />
               <div>
-                <p>Human Behaviour – A Study</p>
-                <small>18/07/2023</small>
+                <p style={{ margin: 0 }}>Human Behaviour – A Study</p>
+                <small style={{ color: textMuted }}>18/07/2023</small>
               </div>
-              <span className="status ok">Done</span>
+              <span className="status ok" style={{ fontSize: 12, color: "#10b981" }}>
+                Done
+              </span>
             </li>
-            <li className="task">
-              <input type="checkbox" aria-label="todo"/>
+
+            <li
+              className="task"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "20px 1fr auto auto",
+                gap: 12,
+                alignItems: "center",
+                background: "#f9fafb",
+                border: `1px solid ${line}`,
+                padding: 10,
+                borderRadius: 12,
+              }}
+            >
+              <input type="checkbox" aria-label="todo" />
               <div>
-                <p>Cognitive psychology: Identify notion of emotions</p>
-                <small>19/07/2023</small>
+                <p style={{ margin: 0 }}>Cognitive psychology: Identify notion of emotions</p>
+                <small style={{ color: textMuted }}>19/07/2023</small>
               </div>
-              <button className="chip warn">Overdue</button>
-              <button className="btn sm">View</button>
+              <button className="chip warn" style={{ border: "none", borderRadius: 999, padding: "6px 10px", fontSize: 12, background: "rgba(245,158,11,0.15)", color: "#fbbf24" }}>
+                Overdue
+              </button>
+              <button className="btn sm" style={{ background: blue, color: "#fff", border: "none", borderRadius: 8, padding: "6px 10px", cursor: "pointer" }}>
+                View
+              </button>
             </li>
-            <li className="task">
-              <input type="checkbox" aria-label="todo"/>
+
+            <li
+              className="task"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "20px 1fr auto",
+                gap: 12,
+                alignItems: "center",
+                background: "#f9fafb",
+                border: `1px solid ${line}`,
+                padding: 10,
+                borderRadius: 12,
+              }}
+            >
+              <input type="checkbox" aria-label="todo" />
               <div>
-                <p>Read “Sense and Sensibility” by Jane Austen</p>
-                <small>26/07/2023</small>
+                <p style={{ margin: 0 }}>Read “Sense and Sensibility” by Jane Austen</p>
+                <small style={{ color: textMuted }}>26/07/2023</small>
               </div>
-              <span className="status subtle">On time</span>
+              <span className="status subtle" style={{ fontSize: 12, color: textMuted }}>
+                On time
+              </span>
             </li>
           </ul>
         </section>
 
         {/* Attendance */}
-        <section className="card row1">
-          <div className="card-head">
-            <h3>Attendance</h3>
-            <span className="badge">This week</span>
+        <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
+          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}>Attendance</h3>
+            <span className="badge" style={{ background: "#1b2128", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
+              This week
+            </span>
           </div>
-          <div className="calendar">
+
+          <div className="calendar" style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 10, flex: 1 }}>
             {[
-              {d:17,t:"on"}, {d:18,t:"on"}, {d:19,t:"on"}, {d:20,t:"on"}, {d:21,t:"off"}, {d:18,t:"abs"}, {d:19,t:"tardy"}
-            ].slice(0,7).map((x,i)=> (
-              <div key={i} className={`cal ${x.t}`}>
-                {x.d}
-              </div>
-            ))}
+              { d: 17, t: "on" },
+              { d: 18, t: "on" },
+              { d: 19, t: "on" },
+              { d: 20, t: "on" },
+              { d: 21, t: "off" },
+              { d: 18, t: "abs" },
+              { d: 19, t: "tardy" },
+            ]
+              .slice(0, 7)
+              .map((x, i) => (
+                <div
+                  key={i}
+                  className={`cal ${x.t}`}
+                  style={{
+                    background: "#f9fafb",
+                    border: `1px solid ${line}`,
+                    borderRadius: 10,
+                    padding: 10,
+                    textAlign: "center",
+                    color: textMuted,
+                    outline: x.t === "on" ? "2px solid #10b981" : x.t === "abs" ? "2px solid #ef4444" : x.t === "tardy" ? "2px solid #f59e0b" : "2px solid " + line,
+                    backgroundColor: x.t === "on" ? "#ecfdf5" : x.t === "abs" ? "#fef2f2" : x.t === "tardy" ? "#fff7ed" : "#f9fafb",
+                  }}
+                >
+                  {x.d}
+                </div>
+              ))}
           </div>
-          <div className="legend">
-            <span className="dot on"/> On time
-            <span className="dot abs"/> Absent
-            <span className="dot tardy"/> Tardy
+
+          <div className="legend" style={{ display: "flex", gap: 18, color: textMuted, fontSize: 13, marginTop: 8 }}>
+            <span className="dot on" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#10b981", border: `1px solid ${line}` }} />
+            On time
+            <span className="dot abs" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#ef4444", border: `1px solid ${line}` }} />
+            Absent
+            <span className="dot tardy" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#f59e0b", border: `1px solid ${line}` }} />
+            Tardy
           </div>
         </section>
 
-        {/* Grades */}
-        <section className="card wide">
-          <div className="card-head">
-            <h3>Grades</h3>
-            <span className="avg"><b>4.1</b> Average grade</span>
+        {/* Grades (wide) */}
+        <section className="card wide" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gridColumn: "1 / span 2" }}>
+          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}>Grades</h3>
+            <span className="avg" style={{ color: textMuted }}>
+              <b>4.1</b> Average grade
+            </span>
           </div>
-          <table className="table">
+          <table className="table" style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
-                <th>Subject</th>
-                <th>Grade</th>
-                <th>Progress</th>
-                <th>Lessons</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Subject</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Grade</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Progress</th>
+                <th style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "left" }}>Lessons</th>
               </tr>
             </thead>
             <tbody>
               {[
-                {s:"Human Behaviour", g:4.3, p:0.65, l:37},
-                {s:"Cognitive Psychology", g:4.9, p:0.8, l:30},
-                {s:"Social Psychology", g:4.0, p:0.5, l:15},
-              ].map(row => (
+                { s: "Human Behaviour", g: 4.3, p: 0.65, l: 37 },
+                { s: "Cognitive Psychology", g: 4.9, p: 0.8, l: 30 },
+                { s: "Social Psychology", g: 4.0, p: 0.5, l: 15 },
+              ].map((row) => (
                 <tr key={row.s}>
-                  <td>{row.s}</td>
-                  <td>{row.g.toFixed(1)}</td>
-                  <td>
-                    <div className="prog"><span style={{width:`${row.p*100}%`}}/></div>
+                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.s}</td>
+                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.g.toFixed(1)}</td>
+                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>
+                    <div className="prog" style={{ height: 8, background: "#1b2128", borderRadius: 999, overflow: "hidden" }}>
+                      <span style={{ display: "block", height: "100%", width: `${row.p * 100}%`, background: "linear-gradient(90deg,#8b5cf6,#60a5fa)" }} />
+                    </div>
                   </td>
-                  <td>{row.l}</td>
+                  <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.l}</td>
                 </tr>
               ))}
             </tbody>
@@ -185,118 +435,36 @@ export default function MainDashboard() {
         </section>
 
         {/* Upcoming events */}
-        <section className="card">
-          <div className="card-head">
-            <h3>Upcoming events</h3>
+        <section className="card" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column" }}>
+          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}>Upcoming events</h3>
           </div>
-          <ul className="timeline">
-            <li>
-              <div className="time">03:00 pm</div>
-              <div className="event purple">
-                <p><b>Lesson with Charls Dickenson</b></p>
-                <small>Behavioural Psychology</small>
+          <ul className="timeline" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 14 }}>
+            <li style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 12, alignItems: "center" }}>
+              <div className="time" style={{ color: textMuted }}>
+                03:00 pm
+              </div>
+              <div className="event purple" style={{ background: "#f9fafb", border: `1px solid ${line}`, borderRadius: 12, padding: 10 }}>
+                <p style={{ margin: 0 }}>
+                  <b>Lesson with Charls Dickenson</b>
+                </p>
+                <small style={{ color: textMuted }}>Behavioural Psychology</small>
               </div>
             </li>
-            <li>
-              <div className="time">04:00 pm</div>
-              <div className="event blue">
-                <p><b>Webinar</b></p>
-                <small>New ways of treatment</small>
+            <li style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 12, alignItems: "center" }}>
+              <div className="time" style={{ color: textMuted }}>
+                04:00 pm
+              </div>
+              <div className="event blue" style={{ background: "#f9fafb", border: `1px solid ${line}`, borderRadius: 12, padding: 10 }}>
+                <p style={{ margin: 0 }}>
+                  <b>Webinar</b>
+                </p>
+                <small style={{ color: textMuted }}>New ways of treatment</small>
               </div>
             </li>
           </ul>
         </section>
       </main>
-
-      <style>{`
-        :root{
-          --bg:#0f1316; --bg-2:#161b20; --bg-3:#1b2128; --card:#1f2630; --text:#eaf1f7; --muted:#a7b0bc; --line:#293241;
-          --primary:#8b5cf6; --primary-2:#a78bfa; --blue:#60a5fa; --red:#ef4444; --orange:#f59e0b; --green:#10b981;
-          --radius:16px;
-        }
-        *{box-sizing:border-box}
-        html,body,#root{height:100%}
-        .wrap{min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
-        /* Topbar: 하나의 컬러로 통일 & 중앙 탭 정렬 */
-        .topbar{height:72px;display:flex;align-items:center;gap:24px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:20}
-        .brand{font-weight:700;letter-spacing:0.2px;min-width:72px}
-        .nav{flex:1;display:flex;justify-content:center;gap:18px}
-        .nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px}
-        .nav a.active,.nav a:hover{background:var(--bg-2);color:var(--text)}
-        .actions{min-width:120px;display:flex;justify-content:flex-end;align-items:center;gap:12px}
-        .icon{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:8px 10px;cursor:pointer}
-        .avatar{width:32px;height:32px;background:linear-gradient(135deg,#64748b,#0ea5e9);border-radius:50%}
-
-        /* Greeting: 타이틀 크게 */
-        .greet{display:grid;grid-template-columns:1fr 420px;gap:24px;padding:24px}
-        .greet h1{margin:0 0 6px 0;font-size:36px;line-height:1.15}
-        .greet p{margin:0;color:var(--muted);font-size:14px}
-        .meta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-        .pill{display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted)}
-        .recent{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
-        .recent-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-        .recent-list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
-        .recent-list li{display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:center}
-        .mini-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#f97316)}
-        .link{color:var(--blue);text-decoration:none}
-        .ghost{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:6px 10px;cursor:pointer}
-
-        /* Grid: 첫 줄 카드 높이 통일 */
-        .grid{display:grid;gap:24px;grid-template-columns:1.2fr 1fr 1fr;align-items:stretch;padding:0 24px 36px}
-        .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column}
-        .card.wide{grid-column:1 / span 2}
-        .row1{min-height:260px}
-        .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-        .badge{background:var(--bg-3);border:1px solid var(--line);border-radius:999px;color:var(--muted);padding:4px 8px;font-size:12px}
-        .avg{color:var(--muted)}
-
-        .bars{display:flex;align-items:end;gap:12px;height:160px;padding:8px 0}
-        .bar{display:flex;flex-direction:column;align-items:center;gap:8px}
-        .bar-fill{width:18px;border-radius:8px;background:linear-gradient(180deg,var(--primary-2),var(--primary))}
-        .bar-label{color:var(--muted);font-size:12px}
-        .legend{display:flex;gap:18px;color:var(--muted);font-size:13px;margin-top:8px}
-        .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:var(--bg-3);border:1px solid var(--line)}
-        .dot.complete{background:var(--primary)} .dot.pending{background:#324055}
-        .dot.on{background:var(--green)} .dot.abs{background:var(--red)} .dot.tardy{background:var(--orange)}
-
-        .tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-        .task{display:grid;grid-template-columns:20px 1fr auto auto;gap:12px;align-items:center;background:var(--bg-2);border:1px solid var(--line);padding:10px;border-radius:12px}
-        .task.done{opacity:0.6}
-        .status{font-size:12px;color:var(--muted)}
-        .status.ok{color:var(--green)}
-        .status.subtle{color:var(--muted)}
-        .chip{border:none;border-radius:999px;padding:6px 10px;font-size:12px;cursor:default}
-        .chip.warn{background:rgba(245,158,11,0.15);color:#fbbf24}
-        .btn{background:var(--blue);color:#0b1220;border:none;border-radius:8px;padding:8px 12px;cursor:pointer}
-        .btn.sm{padding:6px 10px}
-
-        .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;flex:1}
-        .cal{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;color:var(--muted)}
-        .cal.on{outline:2px solid var(--green);color:#d1fae5}
-        .cal.off{outline:2px solid var(--line)}
-        .cal.abs{outline:2px solid var(--red);color:#fecaca}
-        .cal.tardy{outline:2px solid var(--orange);color:#ffedd5}
-
-        .table{width:100%;border-collapse:collapse}
-        .table th,.table td{border-top:1px solid var(--line);padding:10px;text-align:left}
-        .prog{height:8px;background:var(--bg-3);border-radius:999px;overflow:hidden}
-        .prog span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--blue))}
-
-        .timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
-        .timeline li{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:center}
-        .time{color:var(--muted)}
-        .event{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:10px}
-        .event.purple{border-color:rgba(139,92,246,0.35)}
-        .event.blue{border-color:rgba(96,165,250,0.35)}
-
-        /* Responsive */
-        @media (max-width:1100px){
-          .greet{grid-template-columns:1fr}
-          .grid{grid-template-columns:1fr}
-          .card.wide{grid-column:auto}
-          .row1{min-height:220px}
-        }
-      `}</style>
     </div>
   );
 }
