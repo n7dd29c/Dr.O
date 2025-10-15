@@ -4,9 +4,11 @@ import { usePathname } from 'next/navigation';
 
 const menuItems = [
   { name: '대시보드', href: '/' },
+  { name: '고객관리', href: '/management' },
   { name: '고객 히스토리', href: '/customer' },
   { name: '전체 리뷰 관리', href: '/reviews' }, // 예시 경로
   { name: 'Dr.O AI', href: '/ai-analysis' }, // 예시 경로
+  { name: '키워드 통계', href: '/keyword' },
 ];
 
 export default function Sidebar() {
