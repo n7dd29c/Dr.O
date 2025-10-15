@@ -25,7 +25,7 @@ export default function MainDashboard() {
       <header
         className="topbar"
         style={{
-          height: 72,
+          height: 92,
           display: "flex",
           alignItems: "center",
           gap: 24,
@@ -98,6 +98,7 @@ export default function MainDashboard() {
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 420px",
+          height: 200,
           gap: 24,
           padding: 24,
           backgroundColor: topbarBg,
@@ -156,62 +157,6 @@ export default function MainDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Recent (밝은 카드) */}
-        <aside
-          className="recent"
-          style={{
-            backgroundColor: "#ffffff",
-            border: `1px solid ${line}`,
-            borderRadius: 16,
-            padding: 16,
-            color: textDark,
-          }}
-        >
-          <div className="recent-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-            <h3 style={{ margin: 0 }}>Recent activities</h3>
-            <button
-              className="ghost"
-              style={{
-                background: "transparent",
-                border: `1px solid ${line}`,
-                color: textMuted,
-                borderRadius: 10,
-                padding: "6px 10px",
-                cursor: "pointer",
-              }}
-            >
-              See all →
-            </button>
-          </div>
-          <ul className="recent-list" style={{ display: "flex", flexDirection: "column", gap: 12, margin: 0, padding: 0, listStyle: "none" }}>
-            <li style={{ display: "grid", gridTemplateColumns: "32px 1fr auto", gap: 12, alignItems: "center" }}>
-              <div className="mini-avatar" style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#ef4444,#f97316)" }} />
-              <div className="recent-body">
-                <p style={{ margin: 0 }}>
-                  Teacher Mr Lopez left a feedback on a <b>“Reflective essay on self”</b>
-                </p>
-                <small style={{ color: textMuted }}>10:00 | 19/07/2023</small>
-              </div>
-              <a className="link" href="#" style={{ color: "#60a5fa", textDecoration: "none" }}>
-                Read it
-              </a>
-            </li>
-
-            <li style={{ display: "grid", gridTemplateColumns: "32px 1fr auto", gap: 12, alignItems: "center" }}>
-              <div className="mini-avatar" style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#ef4444,#f97316)" }} />
-              <div className="recent-body">
-                <p style={{ margin: 0 }}>
-                  Teacher Ms Lynn left a feedback on a <b>“Behavioural report”</b>
-                </p>
-                <small style={{ color: textMuted }}>16:00 | 18/07/2023</small>
-              </div>
-              <a className="link" href="#" style={{ color: "#60a5fa", textDecoration: "none" }}>
-                Read it
-              </a>
-            </li>
-          </ul>
-        </aside>
       </section>
 
       {/* Grid (배치 자체는 기존 클래스 사용) */}
@@ -220,7 +165,7 @@ export default function MainDashboard() {
         <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <h3 style={{ margin: 0 }}>Task progress</h3>
-            <span className="badge" style={{ background: "#1b2128", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
+            <span className="badge" style={{ background: "#e7e7e7ff", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
               This week
             </span>
           </div>
@@ -350,7 +295,7 @@ export default function MainDashboard() {
         <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <h3 style={{ margin: 0 }}>Attendance</h3>
-            <span className="badge" style={{ background: "#1b2128", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
+            <span className="badge" style={{ background: "#e7e7e7ff", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
               This week
             </span>
           </div>
@@ -387,11 +332,11 @@ export default function MainDashboard() {
           </div>
 
           <div className="legend" style={{ display: "flex", gap: 18, color: textMuted, fontSize: 13, marginTop: 8 }}>
-            <span className="dot on" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#10b981", border: `1px solid ${line}` }} />
+            <span className="dot on" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: -12, marginTop: 5, background: "#10b981", border: `1px solid ${line}` }} />
             On time
-            <span className="dot abs" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#ef4444", border: `1px solid ${line}` }} />
+            <span className="dot abs" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: -12, marginTop: 5, background: "#ef4444", border: `1px solid ${line}` }} />
             Absent
-            <span className="dot tardy" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#f59e0b", border: `1px solid ${line}` }} />
+            <span className="dot tardy" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: -12, marginTop: 5, background: "#f59e0b", border: `1px solid ${line}` }} />
             Tardy
           </div>
         </section>
