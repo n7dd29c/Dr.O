@@ -1,6 +1,8 @@
-// app/MainDashboard.tsx
 "use client";
+
 import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function SplitBar({ pos }: { pos: number }) {
   const p = Math.max(0, Math.min(1, pos));
@@ -55,6 +57,10 @@ export default function MainDashboard() {
   const onTopbarBorder = "rgba(255,255,255,.12)";
   const onTopbarChipBg = "rgba(255,255,255,.08)";
 
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+  pathname === href || pathname.startsWith(href + "/");
+
   return (
     <div className="wrap" style={{ minHeight: "100vh", backgroundColor: pageBg, color: textDark, fontFamily: "Inter,system-ui,Arial,sans-serif" }}>
       {/* Top Bar */}
@@ -78,15 +84,31 @@ export default function MainDashboard() {
         </div>
 
         <nav className="nav" style={{ flex: 1, display: "flex", justifyContent: "center", gap: 18 }}>
-          <a className="active" href="#" style={{ color: onTopbarText, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <Link
+            href="/"
+            className={isActive("/") ? "active" : undefined}
+            style={{
+              color: isActive("/") ? "#fff" : "rgba(255,255,255,.7)",
+              textDecoration: "none", padding: "8px 12px", borderRadius: 10,
+              background: isActive("/") ? "rgba(255,255,255,.08)" : "transparent",
+            }}
+          >
             대시보드
-          </a>
+          </Link>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객관리
           </a>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <Link
+              href="/reviews"
+              className={isActive("/reviews") ? "active" : undefined}
+              style={{
+                color: isActive("/reviews") ? "#fff" : "rgba(255,255,255,.7)",
+                textDecoration: "none", padding: "8px 12px", borderRadius: 10,
+                background: isActive("/reviews") ? "rgba(255,255,255,.08)" : "transparent",
+              }}
+            >
             전체리뷰관리
-          </a>
+          </Link>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             Dr.O AI
           </a>
