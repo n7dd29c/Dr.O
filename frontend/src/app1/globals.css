@@ -1,0 +1,25 @@
+/* 1. Tailwind CSS의 기본 스타일을 불러오는 세 줄이 가장 먼저 와야 합니다. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 2. @import와 @theme는 삭제되었습니다. */
+/* 3. 나머지 표준 CSS 코드는 그대로 사용해도 괜찮습니다. */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
