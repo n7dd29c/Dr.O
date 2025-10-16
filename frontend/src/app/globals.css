@@ -1,5 +1,7 @@
 /* 1. Tailwind CSS의 기본 스타일을 불러오는 세 줄이 가장 먼저 와야 합니다. */
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
