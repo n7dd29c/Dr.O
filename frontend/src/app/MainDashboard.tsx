@@ -468,7 +468,7 @@ export default function MainDashboard() {
         {/* 3. Attendance (변동 없음) */}
         <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}>Attendance (리뷰 반응 속도)</h3>
+            <h3 style={{ margin: 0 }}>Attendance (리뷰 만족도)</h3>
             <span className="badge" style={{ background: "#e7e7e7ff", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
               This week
             </span>
