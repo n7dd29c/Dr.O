@@ -1,8 +1,76 @@
-// app/MainDashboard.tsx
 "use client";
 import React, { useState } from "react";
-import Link from 'next/link';
+// Link 컴포넌트 사용 시 컴파일 오류가 발생하므로, a 태그로 대체합니다.
 
+// --- 기존 고객 문의 데이터 ---
+export interface Inquiry {
+  id: number;
+  subject: string;
+  customerName: string;
+  date: string;
+  status: '처리 완료' | '진행 중' | '미확인';
+  type: '제품 불만' | '서비스 문의' | '기술 지원' | '일반 문의';
+}
+
+export const customerInquiries: Inquiry[] = [
+  { id: 1008, subject: "서비스 이용 중 앱 오류 발생 문의", customerName: "김민준", date: "2024-10-16", status: '미확인', type: '기술 지원' },
+  { id: 1007, subject: "신규 기능 도입 관련 제안 요청", customerName: "이서연", date: "2024-10-15", status: '진행 중', type: '일반 문의' },
+  { id: 1006, subject: "배송 지연에 따른 환불 문의", customerName: "박하준", date: "2024-10-15", status: '처리 완료', type: '제품 불만' },
+  { id: 1005, subject: "제품 품질 개선 사항 피드백", customerName: "정지우", date: "2024-10-14", status: '미확인', type: '제품 불만' },
+  { id: 1004, subject: "월별 구독료 결제 내역 문의", customerName: "최도윤", date: "2024-10-13", status: '처리 완료', type: '서비스 문의' },
+  { id: 1003, subject: "로그인 불가 문제 해결 요청", customerName: "한지아", date: "2024-10-13", status: '진행 중', type: '기술 지원' },
+  { id: 1002, subject: "직원 응대 불만 신고", customerName: "강태영", date: "2024-10-12", status: '미확인', type: '제품 불만' },
+  { id: 1001, subject: "기타 일반적인 문의사항", customerName: "윤채원", date: "2024-10-11", status: '처리 완료', type: '일반 문의' },
+];
+
+// --- ✅ 새로 추가된 블랙리스트 데이터 및 타입 ---
+export interface BlacklistCustomer {
+  id: string;
+  name: string;
+  reason: string;
+  lastVisit: string;
+  status: '활동중' | '차단' | '주의 필요';
+}
+
+export const blacklistCustomers: BlacklistCustomer[] = [
+  { id: 'BL001', name: '김진상', reason: '악성 리뷰 작성 (3회)', lastVisit: '2024-09-20', status: '활동중' }, 
+  { id: 'BL002', name: '박민폐', reason: '허위 사실 유포 / 부당 환불 요구', lastVisit: '2024-08-15', status: '차단' },
+  { id: 'BL003', name: '이민수', reason: '반복적 불만 제기 (제품 문제)', lastVisit: '2024-10-01', status: '활동중' },
+  { id: 'BL004', name: '정하나', reason: '별점 테러 (이유 불명)', lastVisit: '2024-07-25', status: '차단' },
+  { id: 'BL005', name: '최경태', reason: '사장 비방 및 명예 훼손', lastVisit: '2024-09-11', status: '차단' },
+  { id: 'BL006', name: '윤지아', reason: '서비스 요구 과도 / 직원 불만', lastVisit: '2024-10-15', status: '주의 필요' },
+  { id: 'BL007', name: '강동원', reason: '경쟁사 언급 및 비하', lastVisit: '2024-06-03', status: '차단' },
+  { id: 'BL008', name: '한소리', reason: '허위 구매 인증 후 리뷰 작성', lastVisit: '2024-08-28', status: '차단' },
+  { id: 'BL009', name: '주철민', reason: '부당한 금전적 보상 요구 (5회)', lastVisit: '2024-09-05', status: '활동중' },
+  { id: 'BL010', name: '임은희', reason: '책임 전가 (본인 실수)', lastVisit: '2024-10-12', status: '활동중' },
+];
+
+// --- ✅ 새로 추가된 일반 회원 데이터 및 타입 ---
+export interface Member {
+  id: string;
+  name: string;
+  grade: 'VIP' | 'Gold' | 'Silver' | 'New';
+  totalSpent: string;
+  joinDate: string;
+}
+
+export const allMembers: Member[] = [
+  { id: 'VIP001', name: '김민준', grade: 'VIP', totalSpent: '2,540,000원', joinDate: '2023-01-15' },
+  { id: 'GLD001', name: '이서연', grade: 'Gold', totalSpent: '1,280,000원', joinDate: '2022-11-20' },
+  { id: 'SIL001', name: '박도윤', grade: 'Silver', totalSpent: '760,000원', joinDate: '2023-08-01' },
+  { id: 'NEW001', name: '최지우', grade: 'New', totalSpent: '120,000원', joinDate: '2024-10-05' },
+  { id: 'SIL002', name: '홍길동', grade: 'Silver', totalSpent: '850,000원', joinDate: '2023-04-10' },
+  { id: 'NEW002', name: '이순신', grade: 'New', totalSpent: '50,000원', joinDate: '2024-10-14' },
+];
+
+
+// --- 데이터 처리 ---
+const recentInquiries = customerInquiries.slice(0, 5);
+const topBlacklist = blacklistCustomers.slice(0, 5); // 상위 5명
+const recentMembers = allMembers.sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime()).slice(0, 4); // 최근 가입 4명
+
+
+// --- SplitBar 컴포넌트 (변동 없음) ---
 function SplitBar({ pos }: { pos: number }) {
   const p = Math.max(0, Math.min(1, pos));
   const split = p * 100;          // 분할 지점(%) — 왼쪽=긍정 끝나는 지점
@@ -10,7 +78,6 @@ function SplitBar({ pos }: { pos: number }) {
   const a = Math.max(0, split - blend / 2);
   const b = Math.min(100, split + blend / 2);
 
-  // 단일 gradient: 좌측(녹→청) → 경계(a~b)에서 청→주/빨을 부드럽게 섞기 → 우측(주→빨)
   const bg = `linear-gradient(
     90deg,
     #60a5fa 0%,
@@ -25,7 +92,6 @@ function SplitBar({ pos }: { pos: number }) {
         height: 10,
         borderRadius: 999,
         background: bg,
-        // 바탕을 살짝 깔아주면 양 끝이 더 또렷합니다.
         boxShadow: "inset 0 0 0 1px #e5e7eb",
         overflow: "hidden",
       }}
@@ -34,20 +100,59 @@ function SplitBar({ pos }: { pos: number }) {
 }
 
 const rows = [
-  { s: "1", sales: 4.3, rating: 4.3, pos: 0.78 }, // pos = 긍정 비율(0~1)
-  { s: "2", sales: 4.9, rating: 4.9, pos: 0.62 },
-  { s: "3", sales: 4.0, rating: 4.0, pos: 0.35 },
+  { s: "제품 A", sales: 4.3, rating: 4.3, pos: 0.78 }, // pos = 긍정 비율(0~1)
+  { s: "제품 B", sales: 4.9, rating: 4.9, pos: 0.62 },
+  { s: "제품 C", sales: 4.0, rating: 4.0, pos: 0.35 },
 ];
 
-export default function MainDashboard() {
-  // ✅ 페이지/탑바 배경색을 상태로 관리 (컬러피커로 즉시 변경)
-  const [pageBg, setPageBg] = useState("#ffffff");   // 페이지 전체 배경
-  const [topbarBg, setTopbarBg] = useState("#fff98eff"); // 탑바 + 그리팅 배경
+// --- 상태별 스타일링 유틸리티 ---
+const getInquiryStatusStyles = (status: Inquiry['status']) => {
+    switch (status) {
+        case '처리 완료':
+            return { color: '#10b981', background: 'rgba(16, 185, 129, 0.1)' }; // green
+        case '진행 중':
+            return { color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' }; // blue
+        case '미확인':
+            return { color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }; // amber/orange
+        default:
+            return { color: '#6b7280', background: '#f3f4f6' };
+    }
+};
 
-  // 공통 색상 팔레트 (필요 시 조정)
-  const textDark = "#0b1220";                 // 밝은 배경에서 본문 텍스트
-  const textMuted = "#6b7280";                // 보조 텍스트
-  const line = "#e5e7eb";                     // 라인
+const getBlacklistStatusStyles = (status: BlacklistCustomer['status']) => {
+    switch (status) {
+        case '차단':
+            return { color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)' }; // red
+        case '주의 필요':
+            return { color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }; // orange
+        case '활동중':
+        default:
+            return { color: '#6b7280', background: 'rgba(107, 114, 128, 0.1)' }; // gray
+    }
+};
+
+const getMemberGradeStyles = (grade: Member['grade']) => {
+    switch (grade) {
+        case 'VIP':
+            return { color: '#a855f7', background: 'rgba(168, 85, 247, 0.1)' }; // purple
+        case 'Gold':
+            return { color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }; // amber
+        case 'Silver':
+            return { color: '#9ca3af', background: 'rgba(156, 163, 175, 0.1)' }; // silver/gray
+        case 'New':
+        default:
+            return { color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' }; // blue
+    }
+};
+
+export default function MainDashboard() {
+  const [pageBg, setPageBg] = useState("#ffffff");
+  const [topbarBg, setTopbarBg] = useState("#fff98eff");
+
+  // 공통 색상 팔레트
+  const textDark = "#0b1220";                 
+  const textMuted = "#6b7280";                
+  const line = "#e5e7eb";                     
   const blue = "#2563EB";
 
   // 탑바/그리팅(어두운 배경)용
@@ -67,7 +172,6 @@ export default function MainDashboard() {
           alignItems: "center",
           gap: 24,
           padding: "0 24px",
-          // 헤더 밑 흰줄 제거: borderBottom 미적용
           backgroundColor: topbarBg,
           position: "sticky",
           top: 0,
@@ -78,25 +182,26 @@ export default function MainDashboard() {
           Dr.O
         </div>
 
+        {/* Link 컴포넌트 대신 일반 <a> 태그 사용 */}
         <nav className="nav" style={{ flex: 1, display: "flex", justifyContent: "center", gap: 18 }}>
           <a className="active" href="#" style={{ color: onTopbarText, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             대시보드
           </a>
-          <Link href="/management" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <a href="/management" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객관리
-          </Link>
-          <Link href="/review" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          </a>
+          <a href="/review" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             전체리뷰관리
-          </Link>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          </a>
+          <a href="/ai" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             Dr.O AI
           </a>
-          <Link href="/customer" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <a href="/customer" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객 히스토리
-          </Link>
-          <Link href="/keyword" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          </a>
+          <a href="/keyword" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             키워드 통계
-          </Link>
+          </a>
         </nav>
 
         <div className="actions" style={{ minWidth: 120, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
@@ -214,49 +319,15 @@ export default function MainDashboard() {
         </div>
       </section>
 
-      {/* Grid (배치 자체는 기존 클래스 사용) */}
-      <main className="grid" style={{ display: "grid", gap: 24, gridTemplateColumns: "1.2fr 1fr 1fr", alignItems: "stretch", padding: "0 24px 36px" }}>
-        {/* Task progress */}
+      {/* Grid */}
+      <main className="grid" style={{ display: "grid", gap: 24, gridTemplateColumns: "1.2fr 1fr 1fr", alignItems: "stretch", padding: "0 24px 36px", marginTop: 20 }}>
+        
+        {/* 1. 최근 고객 문의 (Inquiries) */}
         <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}>Task progress</h3>
-            <span className="badge" style={{ background: "#e7e7e7ff", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
-              This week
-            </span>
-          </div>
-
-          <div className="bars" style={{ display: "flex", alignItems: "flex-end", gap: 12, height: 160, padding: "8px 0" }}>
-            {[
-              { label: "Sat", v: 12 },
-              { label: "Sun", v: 18 },
-              { label: "Mon", v: 8 },
-              { label: "Tue", v: 6 },
-              { label: "Wed", v: 10 },
-              { label: "Thu", v: 17 },
-              { label: "Fri", v: 14 },
-            ].map((d) => (
-              <div key={d.label} className="bar" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-                <div className="bar-fill" style={{ width: 18, height: d.v * 6, borderRadius: 8, background: "linear-gradient(180deg,#a78bfa,#8b5cf6)" }} />
-                <span className="bar-label" style={{ color: textMuted, fontSize: 12 }}>
-                  {d.label}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="legend" style={{ display: "flex", gap: 18, color: textMuted, fontSize: 13, marginTop: 8 }}>
-            <span className="dot complete" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#8b5cf6", border: `1px solid ${line}` }} />
-            Complete
-            <span className="dot pending" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: 6, background: "#324055", border: `1px solid ${line}` }} />
-            Pending
-          </div>
-        </section>
-
-        {/* Assignments */}
-        <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
-          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}>Assignments</h3>
-            <button
+            <h3 style={{ margin: 0 }}>최근 고객 문의 (5건)</h3>
+            <a 
+              href="/management" 
               className="ghost"
               style={{
                 background: "transparent",
@@ -265,91 +336,139 @@ export default function MainDashboard() {
                 borderRadius: 10,
                 padding: "6px 10px",
                 cursor: "pointer",
+                textDecoration: 'none',
+                fontSize: 13
               }}
             >
-              See all →
-            </button>
+              전체 보기 →
+            </a>
           </div>
-          <ul className="tasks" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-            <li
-              className="task done"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "20px 1fr auto",
-                gap: 12,
-                alignItems: "center",
-                background: "#f3f4f6",
-                border: `1px solid ${line}`,
-                padding: 10,
-                borderRadius: 12,
-                opacity: 0.75,
-              }}
-            >
-              <input type="checkbox" defaultChecked aria-label="done" />
-              <div>
-                <p style={{ margin: 0 }}>Human Behaviour – A Study</p>
-                <small style={{ color: textMuted }}>18/07/2023</small>
-              </div>
-              <span className="status ok" style={{ fontSize: 12, color: "#10b981" }}>
-                Done
-              </span>
-            </li>
 
-            <li
-              className="task"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "20px 1fr auto auto",
-                gap: 12,
-                alignItems: "center",
-                background: "#f9fafb",
-                border: `1px solid ${line}`,
-                padding: 10,
-                borderRadius: 12,
-              }}
-            >
-              <input type="checkbox" aria-label="todo" />
-              <div>
-                <p style={{ margin: 0 }}>Cognitive psychology: Identify notion of emotions</p>
-                <small style={{ color: textMuted }}>19/07/2023</small>
-              </div>
-              <button className="chip warn" style={{ border: "none", borderRadius: 999, padding: "6px 10px", fontSize: 12, background: "rgba(245,158,11,0.15)", color: "#fbbf24" }}>
-                Overdue
-              </button>
-              <button className="btn sm" style={{ background: blue, color: "#fff", border: "none", borderRadius: 8, padding: "6px 10px", cursor: "pointer" }}>
-                View
-              </button>
-            </li>
+          <ul className="inquiries" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8, flex: 1, overflowY: 'auto' }}>
+            {recentInquiries.map((inquiry) => {
+                const statusStyles = getInquiryStatusStyles(inquiry.status);
+                return (
+                    <li
+                        key={inquiry.id}
+                        className="inquiry-item"
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            background: "#f9fafb",
+                            border: `1px solid ${line}`,
+                            padding: 10,
+                            borderRadius: 12,
+                        }}
+                    >
+                        {/* ID와 날짜 */}
+                        <div style={{ minWidth: 60, fontSize: 12, color: textMuted, textAlign: 'center' }}>
+                            <div style={{ fontWeight: 600 }}>#{inquiry.id}</div>
+                            <small>{inquiry.date.substring(5)}</small>
+                        </div>
 
-            <li
-              className="task"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "20px 1fr auto",
-                gap: 12,
-                alignItems: "center",
-                background: "#f9fafb",
-                border: `1px solid ${line}`,
-                padding: 10,
-                borderRadius: 12,
-              }}
-            >
-              <input type="checkbox" aria-label="todo" />
-              <div>
-                <p style={{ margin: 0 }}>Read “Sense and Sensibility” by Jane Austen</p>
-                <small style={{ color: textMuted }}>26/07/2023</small>
-              </div>
-              <span className="status subtle" style={{ fontSize: 12, color: textMuted }}>
-                On time
-              </span>
-            </li>
+                        {/* 문의 제목 */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ margin: 0, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={inquiry.subject}>
+                                {inquiry.subject}
+                            </p>
+                            <small style={{ color: textMuted, fontSize: 12 }}>{inquiry.customerName} / {inquiry.type}</small>
+                        </div>
+
+                        {/* 상태 뱃지 */}
+                        <span 
+                            className="status-badge" 
+                            style={{
+                                fontSize: 12,
+                                fontWeight: 600,
+                                borderRadius: 999,
+                                padding: "4px 8px",
+                                ...statusStyles,
+                                minWidth: 70,
+                                textAlign: 'center',
+                                flexShrink: 0
+                            }}
+                        >
+                            {inquiry.status}
+                        </span>
+                    </li>
+                );
+            })}
           </ul>
         </section>
 
-        {/* Attendance */}
+
+        {/* 2. ✅ 블랙리스트 고객 (Assignments 카드 대체) */}
         <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}>Attendance</h3>
+            <h3 style={{ margin: 0, color: '#ef4444' }}>블랙리스트 Top 5</h3>
+            <a 
+              href="/management" 
+              className="ghost"
+              style={{
+                background: "transparent",
+                border: `1px solid ${line}`,
+                color: textMuted,
+                borderRadius: 10,
+                padding: "6px 10px",
+                cursor: "pointer",
+                textDecoration: 'none',
+                fontSize: 13
+              }}
+            >
+              전체 보기 →
+            </a>
+          </div>
+          <ul className="blacklist" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8, flex: 1, overflowY: 'auto' }}>
+            {topBlacklist.map((customer) => {
+                const statusStyles = getBlacklistStatusStyles(customer.status);
+                return (
+                    <li
+                        key={customer.id}
+                        className="customer-item"
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 90px 70px",
+                            gap: 10,
+                            alignItems: "center",
+                            background: "#f9fafb",
+                            border: `1px solid ${line}`,
+                            padding: 10,
+                            borderRadius: 12,
+                        }}
+                    >
+                        {/* 고객 정보 */}
+                        <div style={{ minWidth: 0 }}>
+                            <p style={{ margin: 0, fontWeight: 600, color: textDark }}>{customer.name}</p>
+                            <small style={{ color: textMuted, fontSize: 11, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={customer.reason}>{customer.reason}</small>
+                        </div>
+                        
+                        {/* 상태 뱃지 */}
+                        <span 
+                            className="status-badge" 
+                            style={{
+                                fontSize: 11,
+                                fontWeight: 600,
+                                borderRadius: 999,
+                                padding: "4px 8px",
+                                ...statusStyles,
+                                textAlign: 'center',
+                                flexShrink: 0
+                            }}
+                        >
+                            {customer.status}
+                        </span>
+                        <small style={{ color: textMuted, fontSize: 11, textAlign: 'right' }}>{customer.lastVisit.substring(5)}</small>
+                    </li>
+                );
+            })}
+          </ul>
+        </section>
+
+        {/* 3. Attendance (변동 없음) */}
+        <section className="card row1" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", minHeight: 260 }}>
+          <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}>Attendance (리뷰 반응 속도)</h3>
             <span className="badge" style={{ background: "#e7e7e7ff", border: `1px solid ${line}`, borderRadius: 999, color: textMuted, padding: "4px 8px", fontSize: 12 }}>
               This week
             </span>
@@ -388,15 +507,15 @@ export default function MainDashboard() {
 
           <div className="legend" style={{ display: "flex", gap: 18, color: textMuted, fontSize: 13, marginTop: 8 }}>
             <span className="dot on" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: -12, marginTop: 5, background: "#10b981", border: `1px solid ${line}` }} />
-            On time
+            On time (1시간 내)
             <span className="dot abs" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: -12, marginTop: 5, background: "#ef4444", border: `1px solid ${line}` }} />
-            Absent
+            Very Slow (24시간 초과)
             <span className="dot tardy" style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", marginRight: -12, marginTop: 5, background: "#f59e0b", border: `1px solid ${line}` }} />
-            Tardy
+            Slow (3시간 초과)
           </div>
         </section>
 
-        {/* Grades (wide) */}
+        {/* 4. Grades (wide) - 변동 없음 */}
         <section className="card wide" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gridColumn: "1 / span 2" }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <h3 style={{ margin: 0 }}>이번 주 평균 별점</h3>
@@ -419,11 +538,11 @@ export default function MainDashboard() {
                 const neg = 1 - row.pos;
                 return (
                   <tr key={row.s}>
-                    <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.s}</td>
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10, fontWeight: 500 }}>{row.s}</td>
                     <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.sales.toFixed(1)}</td>
-                    <td style={{ borderTop: `1px solid ${line}`, padding: 10 }}>{row.rating.toFixed(1)}</td>
+                    <td style={{ borderTop: `1px solid ${line}`, padding: 10, fontWeight: 600 }}>{row.rating.toFixed(1)}</td>
 
-                    {/* ✅ 긍정/부정 스플릿 바 (왼쪽=긍정, 오른쪽=부정) */}
+                    {/* 긍정/부정 스플릿 바 (왼쪽=긍정, 오른쪽=부정) */}
                     <td style={{ borderTop: `1px solid ${line}`, padding: 10, minWidth: 420 }}>
                       <div style={{ display: "grid", gap: 6 }}>
                         <SplitBar pos={row.pos} />
@@ -434,7 +553,7 @@ export default function MainDashboard() {
                       </div>
                     </td>
 
-                    {/* 부정 수치(선택) — 필요 없으면 이 칸 통째로 삭제 가능 */}
+                    {/* 부정 수치(선택) */}
                     <td style={{ borderTop: `1px solid ${line}`, padding: 10, textAlign: "right" }}>
                       {Math.round(neg * 100)}%
                     </td>
@@ -445,34 +564,72 @@ export default function MainDashboard() {
           </table>
         </section>
 
-        {/* Upcoming events */}
+        {/* 5. ✅ 최근 신규 회원 (Upcoming events 카드 대체) */}
         <section className="card" style={{ background: "#fff", border: `1px solid ${line}`, borderRadius: 16, padding: 16, display: "flex", flexDirection: "column" }}>
           <div className="card-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}>Upcoming events</h3>
+            <h3 style={{ margin: 0 }}>최근 가입 회원 (New/Silver)</h3>
+            <a 
+              href="/customer" 
+              className="ghost"
+              style={{
+                background: "transparent",
+                border: `1px solid ${line}`,
+                color: textMuted,
+                borderRadius: 10,
+                padding: "6px 10px",
+                cursor: "pointer",
+                textDecoration: 'none',
+                fontSize: 13
+              }}
+            >
+              전체 보기 →
+            </a>
           </div>
-          <ul className="timeline" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 14 }}>
-            <li style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 12, alignItems: "center" }}>
-              <div className="time" style={{ color: textMuted }}>
-                03:00 pm
-              </div>
-              <div className="event purple" style={{ background: "#f9fafb", border: `1px solid ${line}`, borderRadius: 12, padding: 10 }}>
-                <p style={{ margin: 0 }}>
-                  <b>Lesson with Charls Dickenson</b>
-                </p>
-                <small style={{ color: textMuted }}>Behavioural Psychology</small>
-              </div>
-            </li>
-            <li style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 12, alignItems: "center" }}>
-              <div className="time" style={{ color: textMuted }}>
-                04:00 pm
-              </div>
-              <div className="event blue" style={{ background: "#f9fafb", border: `1px solid ${line}`, borderRadius: 12, padding: 10 }}>
-                <p style={{ margin: 0 }}>
-                  <b>Webinar</b>
-                </p>
-                <small style={{ color: textMuted }}>New ways of treatment</small>
-              </div>
-            </li>
+          <ul className="members" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10, flex: 1, overflowY: 'auto' }}>
+            {recentMembers.map((member) => {
+                const gradeStyles = getMemberGradeStyles(member.grade);
+                return (
+                    <li
+                        key={member.id}
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 60px 80px",
+                            gap: 12,
+                            alignItems: "center",
+                            background: "#f9fafb",
+                            border: `1px solid ${line}`,
+                            borderRadius: 12,
+                            padding: 10,
+                        }}
+                    >
+                        {/* 이름 및 가입일 */}
+                        <div style={{ minWidth: 0 }}>
+                            <p style={{ margin: 0, fontWeight: 600, color: textDark }}>{member.name}</p>
+                            <small style={{ color: textMuted, fontSize: 11 }}>가입: {member.joinDate}</small>
+                        </div>
+                        
+                        {/* 등급 뱃지 */}
+                        <span 
+                            className="grade-badge" 
+                            style={{
+                                fontSize: 11,
+                                fontWeight: 600,
+                                borderRadius: 999,
+                                padding: "4px 8px",
+                                ...gradeStyles,
+                                textAlign: 'center',
+                                flexShrink: 0
+                            }}
+                        >
+                            {member.grade}
+                        </span>
+                        {/* 금액 */}
+                        <div style={{ color: textDark, fontSize: 12, fontWeight: 500, textAlign: 'right' }}>
+                            {member.totalSpent.split(',')[0]}
+                        </div>
+                    </li>
+                );
+            })}
           </ul>
         </section>
       </main>

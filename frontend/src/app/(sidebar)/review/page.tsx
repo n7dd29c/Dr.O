@@ -71,11 +71,11 @@ const topKeywords = {
   ],
 };
 
-const TABS = ['키워드 말뭉치', '긍정·부정 비율', '상위 키워드'] as const;
+const TABS = ['한눈에 보기', '긍정·부정 비율', '악성 단어 필터링'] as const;
 type Tab = typeof TABS[number];
 
 
-// --- WordCloud 스타일 컴포넌트 ---
+// --- 워드 클라우드 스타일 컴포넌트 ---
 const WordCloudSection = ({
   title,
   keywords,
@@ -94,7 +94,6 @@ const WordCloudSection = ({
   const sortedKeywords = useMemo(() => [...keywords].sort((a, b) => b.count - a.count), [keywords]);
 
   // 동심원 배치를 위한 설정 (Index 0은 중앙)
-  // 방사형 배치를 위해 반지름을 10, 22, 35로 조정하고, 랜덤 지터를 줄여 밀도를 높였습니다.
   const RING_CONFIG = useMemo(() => ([
     { indexStart: 1, indexEnd: 5, radius: 10 },  // Inner Ring (5 words)
     { indexStart: 6, indexEnd: 10, radius: 22 }, // Middle Ring (5 words)
@@ -116,15 +115,12 @@ const WordCloudSection = ({
         {title}
       </h4>
       
-      {/* 상대적인 위치 지정을 위해 relative 설정 및 높이/너비를 꽉 채웁니다. 
-          컨테이너 높이에서 제목/마진 공간(40px)을 뺌. */}
       <div className="relative h-[calc(100%-40px)] w-full text-left">
         {sortedKeywords.map((k, index) => {
-          // 빈도에 따라 폰트 크기 계산: 중앙 키워드의 폰트 스케일을 줄여 주변 단어와의 겹침을 최소화합니다.
+          // 빈도에 따라 폰트 크기 계산
           const scale = index === 0 
-            // 중앙 키워드 스케일을 기존 3.5배에서 2.5배로 더 줄여 중앙 공간을 확보
             ? Math.max(1.5, (k.count / maxCount) ** 0.5 * 2.5) 
-            : Math.max(0.8, (k.count / maxCount) ** 0.5 * 2.5); // 주변 키워드 (2.5배 유지)
+            : Math.max(0.8, (k.count / maxCount) ** 0.5 * 2.5); 
             
           const size = `${Math.round(baseFontSize * scale)}px`;
           
@@ -135,52 +131,38 @@ const WordCloudSection = ({
           let positionStyle: React.CSSProperties = {};
           
           if (index === 0) {
-            // 1. 중앙 키워드: 가장 큰 키워드를 정중앙에 배치합니다.
+            // 1. 중앙 키워드
             positionStyle = {
               position: 'absolute',
               top: '50%',
               left: '50%',
-              transform: 'translate(-50%, -50%)', // 요소의 중심을 중앙에 맞춥니다.
-              zIndex: 10, // 가장 위에 표시되도록 설정
+              transform: 'translate(-50%, -50%)', 
+              zIndex: 10, 
               textShadow: isPos ? '0 0 10px rgba(59, 130, 246, 0.5)' : '0 0 10px rgba(244, 63, 94, 0.5)',
             };
           } else {
-            // 2. 주변 키워드: 다중 링에 분산 배치합니다.
+            // 2. 주변 키워드: 다중 링에 분산 배치
             const currentRing = RING_CONFIG.find(r => index >= r.indexStart && index <= r.indexEnd);
 
             if (currentRing) {
-              // 현재 링에 속하는 키워드들만 추출합니다.
               const batchWords = sortedKeywords.slice(currentRing.indexStart, currentRing.indexEnd + 1);
               const totalWordsInBatch = batchWords.length;
-              
-              // 현재 링에서 이 키워드의 순서 (0부터 시작)
               const indexInBatch = index - currentRing.indexStart;
-              
-              // 각도 계산: -90도(위)에서 시작하여 시계 방향으로 배치
               const angleOffset = -90; 
-              const angle = angleOffset + indexInBatch * (360 / totalWordsInBatch); // 현재 링의 총 단어 수로 각도 계산
-              
-              // 반지름을 축소된 값으로 사용
+              const angle = angleOffset + indexInBatch * (360 / totalWordsInBatch); 
               const radius = currentRing.radius;
-              
-              // 각도를 라디안으로 변환
               const rad = (angle * Math.PI) / 180;
-              
-              // 위치 계산 (x, y)
               const x = radius * Math.cos(rad);
               const y = radius * Math.sin(rad);
 
-              // **랜덤 지터 추가 (방사형 효과)**
-              // -3%에서 +3% 사이의 무작위 값 추가하여 링 정렬 방지 (기존 5%에서 축소)
+              // 랜덤 지터 추가 (방사형 효과)
               const jitterX = (Math.random() - 0.5) * 6; 
               const jitterY = (Math.random() - 0.5) * 6;
               
               positionStyle = {
                 position: 'absolute',
-                // 50%를 중앙 기준으로 삼고, 계산된 x/y 값과 지터(Jitter)를 더하여 배치
                 top: `calc(50% + ${y + jitterY}%)`,
                 left: `calc(50% + ${x + jitterX}%)`,
-                // 요소의 중심이 계산된 위치에 오도록 변환
                 transform: 'translate(-50%, -50%)', 
                 transition: 'all 0.5s ease-out',
                 zIndex: 5,
@@ -196,7 +178,7 @@ const WordCloudSection = ({
                 fontSize: size,
                 opacity: opacityScale,
                 cursor: 'default',
-                ...positionStyle, // 계산된 위치 스타일 적용
+                ...positionStyle, 
               }}
               title={`빈도: ${k.count}`}
             >
@@ -211,8 +193,114 @@ const WordCloudSection = ({
 // --- WordCloud 스타일 컴포넌트 끝 ---
 
 
+// --- 악성 단어 필터링을 위한 더미 데이터 및 로직 ---
+
+const dummyReviews: string[] = [
+  "배송은 빨랐지만, 서비스가 너무 개판이고 정말 짜증이 납니다. 이런 식으로 장사하지 마세요. 완전 엉망진창이네요.",
+  "제품은 깔끔하고 좋았는데, 직원의 태도가 정말 건방졌습니다. 다시는 오고 싶지 않을 정도로 불쾌했어요.",
+  "가성비는 최고지만, 솔직히 조잡스러웠던 점이 많습니다. 이 가격이라 참는 거지, 다음에는 안 올 겁니다. 개선이 필요해요.",
+  "팀원 간 소통 문제가 저질스러워요. 개발 프로세스도 엉망이고, 프로젝트 진행이 너무 지연되는 것 같아 짜증나요.",
+  "리뷰를 달까 말까 고민했는데, 솔직히 이 정도의 불쾌함은 처음이라 남깁니다. 다음에 방문할 때는 제발 개선되기를 바랍니다."
+];
+
+// 필터링할 악성/부정 키워드
+const maliciousWords: string[] = [
+  '개판이고', '짜증이', '엉망진창', '건방졌습니다', '불쾌', '조잡스러웠던', '지연되는', '불안해요', '저질스러워요', '불쾌함'
+];
+
+/**
+ * 텍스트를 악성 단어 기준으로 분리하여 배열로 반환하는 헬퍼 함수
+ */
+const processReviewText = (text: string, maliciousWords: string[]) => {
+  const parts: { text: string; isMalicious: boolean }[] = [];
+  
+  // 모든 악성 단어를 정규식 패턴으로 결합
+  const pattern = new RegExp(`(${maliciousWords.join('|')})`, 'gi');
+  let lastIndex = 0;
+  
+  // 텍스트를 순회하며 악성 단어 매치
+  text.replace(pattern, (match, word, index) => {
+    // 1. 악성 단어 앞에 있는 안전한 텍스트 추가
+    if (index > lastIndex) {
+      parts.push({ text: text.substring(lastIndex, index), isMalicious: false });
+    }
+    // 2. 악성 단어 자체 추가
+    parts.push({ text: word, isMalicious: true });
+    lastIndex = index + match.length;
+    return match;
+  });
+
+  // 3. 마지막 악성 단어 이후의 텍스트 추가
+  if (lastIndex < text.length) {
+    parts.push({ text: text.substring(lastIndex), isMalicious: false });
+  }
+  
+  return parts;
+};
+
+// 개별 리뷰 박스를 렌더링하는 컴포넌트
+const ReviewBox = ({ review, index }: { review: string; index: number }) => {
+  const processedParts = useMemo(() => processReviewText(review, maliciousWords), [review]);
+
+  return (
+    <div className="rounded-2xl border border-rose-300 bg-rose-50 p-5 shadow-md">
+      <div className="mb-2 text-xs font-semibold text-slate-500">
+        리뷰 #{index + 1}
+      </div>
+      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+        {processedParts.map((part, partIndex) => (
+          <span
+            key={partIndex}
+            className={`
+              ${part.isMalicious 
+                ? 'text-rose-700 font-bold px-1 mx-0.5 rounded-sm inline-block cursor-pointer' 
+                : 'text-slate-700'
+              }
+              ${part.isMalicious 
+                ? 'filter blur-sm bg-rose-200 hover:blur-none hover:bg-rose-300' // 단어별 블러 및 호버 해제
+                : 'filter blur-none'
+              }
+              transition-all duration-300
+            `}
+            title={part.isMalicious ? "필터링된 단어 (마우스 오버로 확인)" : undefined}
+          >
+            {part.text}
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+};
+
+// --- 악성 단어 필터링 탭 컴포넌트 ---
+const FilteredReviewSection = () => {
+  return (
+    <section>
+      <h3 className="mb-2 text-xl font-bold text-slate-800">
+        악성 단어 필터링 현황
+      </h3>
+      <p className="mb-6 text-sm text-slate-500">
+        시스템이 탐지한 악성/부정 단어를 블러 처리했습니다. 마우스를 **각 단어** 위에 올려 내용을 확인하세요.
+      </p>
+
+      {/* 리뷰 목록 (스크롤 가능한 컨테이너) */}
+      <div className="space-y-4">
+        {dummyReviews.map((review, index) => (
+          <ReviewBox key={index} review={review} index={index} />
+        ))}
+      </div>
+      
+      <div className="mt-6 text-xs text-slate-400">
+        <span className="font-semibold text-slate-600">총 리뷰 수:</span> {dummyReviews.length}건
+      </div>
+    </section>
+  );
+};
+// --- 악성 단어 필터링 탭 컴포넌트 끝 ---
+
+
 export default function ManagementPage() {
-  const [tab, setTab] = useState<Tab>('키워드 말뭉치');
+  const [tab, setTab] = useState<Tab>('한눈에 보기');
 
   // 전체 키워드 중 최대 빈도 계산
   const maxCount = useMemo(
@@ -260,13 +348,13 @@ export default function ManagementPage() {
           <nav className="space-y-1">
             <button
               className={`w-full rounded-xl px-3 py-2 text-left text-sm ${
-                tab === '키워드 말뭉치'
+                tab === '한눈에 보기'
                   ? 'bg-blue-50 font-semibold text-blue-700'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
-              onClick={() => setTab('키워드 말뭉치')}
+              onClick={() => setTab('한눈에 보기')}
             >
-              키워드분석 (워드 클라우드)
+              한눈에 보기
             </button>
             <button
               className={`w-full rounded-xl px-3 py-2 text-left text-sm ${
@@ -280,11 +368,11 @@ export default function ManagementPage() {
             </button>
             <button
               className={`w-full rounded-xl px-3 py-2 text-left text-sm ${
-                tab === '상위 키워드'
+                tab === '악성 단어 필터링'
                   ? 'bg-blue-50 font-semibold text-blue-700'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
-              onClick={() => setTab('상위 키워드')}
+              onClick={() => setTab('악성 단어 필터링')}
             >
               필터링 현황
             </button>
@@ -312,13 +400,13 @@ export default function ManagementPage() {
             </div>
 
             {/* 탭 콘텐츠 */}
-            {tab === '키워드 말뭉치' && (
+            {tab === '한눈에 보기' && (
               <section>
                 <h3 className="mb-2 text-xl font-bold text-slate-800">
-                  리뷰 키워드 워드 클라우드 분석 (방사형 배치)
+                  리뷰 키워드 분석
                 </h3>
                 <p className="mb-6 text-sm text-slate-500">
-                  키워드를 중앙에서 바깥으로 흩뿌린 듯한 **방사형 배치**로 변경하여, 단어 간 겹침을 최소화하고 시각적인 분산 효과를 극대화했습니다.
+                  최근 리뷰에서 나타났던 키워드를 한눈에 모아볼게요.
                 </p>
 
                 {/* 워드 클라우드 섹션 (2분할) */}
@@ -342,92 +430,98 @@ export default function ManagementPage() {
               </section>
             )}
 
+            {/* 긍정·부정 비율 탭 */}
             {tab === '긍정·부정 비율' && (
-              <section>
-                <h3 className="mb-3 text-base font-bold text-slate-800">
-                  긍정/부정 비율(샘플)
-                </h3>
-                <div className="mb-3 flex items-center justify-between text-sm text-slate-600">
-                  <span>긍정 {sampleRatio.pos}%</span>
-                  <span>부정 {sampleRatio.neg}%</span>
-                </div>
-                {/* 긍정/부정 바 */}
-                <div className="h-8 w-full overflow-hidden rounded-full border border-slate-200 relative">
-                  <div
-                    className="h-full bg-emerald-500 absolute left-0 top-0"
-                    style={{ width: `${sampleRatio.pos}%` }}
-                    title={`긍정 ${sampleRatio.pos}%`}
-                  />
-                  <div
-                    className="h-full bg-rose-500 absolute right-0 top-0"
-                    style={{ width: `${sampleRatio.neg}%` }}
-                    title={`부정 ${sampleRatio.neg}%`}
-                  />
-                </div>
+              <>
+                <section className="mb-8">
+                  <h3 className="mb-3 text-base font-bold text-slate-800">
+                    긍정/부정 비율(샘플)
+                  </h3>
+                  <div className="mb-3 flex items-center justify-between text-sm text-slate-600">
+                    <span>긍정 {sampleRatio.pos}%</span>
+                    <span>부정 {sampleRatio.neg}%</span>
+                  </div>
+                  {/* 긍정/부정 바 */}
+                  <div className="h-8 w-full overflow-hidden rounded-full border border-slate-200 relative">
+                    <div
+                      className="h-full bg-emerald-500 absolute left-0 top-0"
+                      style={{ width: `${sampleRatio.pos}%` }}
+                      title={`긍정 ${sampleRatio.pos}%`}
+                    />
+                    <div
+                      className="h-full bg-rose-500 absolute right-0 top-0"
+                      style={{ width: `${sampleRatio.neg}%` }}
+                      title={`부정 ${sampleRatio.neg}%`}
+                    />
+                  </div>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-                    <div className="mb-1 text-sm font-semibold text-emerald-900">긍정</div>
-                    <p className="text-sm text-emerald-800">
-                      응답의 다수는 친절·맛·속도 관련 긍정적 피드백입니다.
-                    </p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                      <div className="mb-1 text-sm font-semibold text-emerald-900">긍정</div>
+                      <p className="text-sm text-emerald-800">
+                        응답의 다수는 친절·맛·속도 관련 긍정적 피드백입니다.
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
+                      <div className="mb-1 text-sm font-semibold text-rose-900">부정</div>
+                      <p className="text-sm text-rose-800">
+                        불친절·지연·가격 이슈가 주요 불만 요인으로 나타납니다.
+                      </p>
+                    </div>
                   </div>
-                  <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
-                    <div className="mb-1 text-sm font-semibold text-rose-900">부정</div>
-                    <p className="text-sm text-rose-800">
-                      불친절·지연·가격 이슈가 주요 불만 요인으로 나타납니다.
-                    </p>
+                </section>
+                
+                <section>
+                  <h3 className="mb-3 text-base font-bold text-slate-800">
+                    긍정/부정 키워드 TOP 5
+                  </h3>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {/* 긍정 */}
+                    <div className="rounded-2xl border border-emerald-200 bg-white p-4">
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                        <span className="text-sm font-bold text-emerald-900">긍정 TOP 5</span>
+                      </div>
+                      <ul className="space-y-2">
+                        {topKeywords.pos.map((k) => (
+                          <li
+                            key={`pos-${k.term}`}
+                            className="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2"
+                          >
+                            <span className="text-sm font-semibold text-emerald-800">{k.term}</span>
+                            <span className="text-xs text-emerald-700">x{k.count}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* 부정 */}
+                    <div className="rounded-2xl border border-rose-200 bg-white p-4">
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-rose-500" />
+                        <span className="text-sm font-bold text-rose-900">부정 TOP 5</span>
+                      </div>
+                      <ul className="space-y-2">
+                        {topKeywords.neg.map((k) => (
+                          <li
+                            key={`neg-${k.term}`}
+                            className="flex items-center justify-between rounded-xl border border-rose-100 bg-rose-50 px-3 py-2"
+                          >
+                            <span className="text-sm font-semibold text-rose-800">{k.term}</span>
+                            <span className="text-xs text-rose-700">x{k.count}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </section>
+                </section>
+              </>
             )}
-
-            {tab === '상위 키워드' && (
-              <section>
-                <h3 className="mb-3 text-base font-bold text-slate-800">
-                  긍정/부정 상위 키워드(샘플)
-                </h3>
-
-                <div className="grid gap-6 md:grid-cols-2">
-                  {/* 긍정 */}
-                  <div className="rounded-2xl border border-emerald-200 bg-white p-4">
-                    <div className="mb-3 flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      <span className="text-sm font-bold text-emerald-900">긍정 TOP 5</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {topKeywords.pos.map((k) => (
-                        <li
-                          key={`pos-${k.term}`}
-                          className="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2"
-                        >
-                          <span className="text-sm font-semibold text-emerald-800">{k.term}</span>
-                          <span className="text-xs text-emerald-700">x{k.count}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* 부정 */}
-                  <div className="rounded-2xl border border-rose-200 bg-white p-4">
-                    <div className="mb-3 flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-rose-500" />
-                      <span className="text-sm font-bold text-rose-900">부정 TOP 5</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {topKeywords.neg.map((k) => (
-                        <li
-                          key={`neg-${k.term}`}
-                          className="flex items-center justify-between rounded-xl border border-rose-100 bg-rose-50 px-3 py-2"
-                        >
-                          <span className="text-sm font-semibold text-rose-800">{k.term}</span>
-                          <span className="text-xs text-rose-700">x{k.count}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </section>
+            
+            {/* 악성 단어 필터링 탭 */}
+            {tab === '악성 단어 필터링' && (
+              <FilteredReviewSection />
             )}
           </div>
         </main>

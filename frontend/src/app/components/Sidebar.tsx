@@ -21,7 +21,7 @@ const MENU = [
   { name: "고객관리", href: "/management" },
   { name: "고객 히스토리", href: "/customer" },
   { name: "전체 리뷰 관리", href: "/review" },
-  { name: "Dr.O AI", href: "/ai-analysis" },
+  { name: "Dr.O AI", href: "/ai" },
   { name: "키워드 통계", href: "/keyword" },
 ];
 
