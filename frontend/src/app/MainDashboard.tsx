@@ -102,7 +102,9 @@ function SplitBar({ pos }: { pos: number }) {
 const rows = [
   { s: "제품 A", sales: 4.3, rating: 4.3, pos: 0.78 }, // pos = 긍정 비율(0~1)
   { s: "제품 B", sales: 4.9, rating: 4.9, pos: 0.62 },
-  { s: "제품 C", sales: 4.0, rating: 4.0, pos: 0.35 },
+  { s: "제품 C", sales: 4.0, rating: 4.0, pos: 0.89 },
+  { s: "제품 D", sales: 4.0, rating: 4.0, pos: 0.71 },
+  { s: "제품 E", sales: 4.0, rating: 4.0, pos: 0.33 },
 ];
 
 // --- 상태별 스타일링 유틸리티 ---
