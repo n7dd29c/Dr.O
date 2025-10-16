@@ -85,9 +85,9 @@ export default function MainDashboard() {
           <Link href="/management" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객관리
           </Link>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <Link href="/review" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             전체리뷰관리
-          </a>
+          </Link>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             Dr.O AI
           </a>
