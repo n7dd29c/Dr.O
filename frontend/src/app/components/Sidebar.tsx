@@ -1,20 +1,19 @@
 "use client";
 
 import React from "react";
-
 // Next.js 모듈 (Link, usePathname)을 주석 처리하여 컴파일 오류 해결
-// import Link from "next/link";
+import Link from "next/link";
 // import { usePathname } from "next/navigation";
 
 /** * IDE에서 마우스를 사용하여 색상 피커로 변경할 수 있도록 
  * 상태 관리 없이 단순 상수로 선언합니다.
  */
 const THEME = {
-  bg: "#0f172a",       // 사이드바 배경
-  fg: "#ffffff",       // 활성 글자 색
-  inactive: "#cbd5e1", // 비활성 글자 색
-  activeBg: "#0b1220", // 활성 메뉴 배경
-  hoverBg: "#334155",  // 호버 배경
+  bg: "#fff98eff",       // 사이드바 배경
+  fg: "#000000ff",       // 활성 글자 색
+  inactive: "#6a6a6aff", // 비활성 글자 색
+  // activeBg: "#ffffffff", // 활성 메뉴 배경
+  // hoverBg: "#ffffffff",  // 호버 배경
 } as const;
 
 const MENU = [
@@ -45,8 +44,8 @@ export default function Sidebar() {
     // CSS 변수로 내려서 :hover 등 순수 CSS로 처리
     ["--sb-fg" as any]: currentTheme.fg,
     ["--sb-inactive" as any]: currentTheme.inactive,
-    ["--sb-active-bg" as any]: currentTheme.activeBg,
-    ["--sb-hover-bg" as any]: currentTheme.hoverBg,
+    // ["--sb-active-bg" as any]: currentTheme.activeBg,
+    // ["--sb-hover-bg" as any]: currentTheme.hoverBg,
   } as React.CSSProperties;
 
   return (
@@ -63,8 +62,9 @@ export default function Sidebar() {
           const active = activeChecker(item.href);
           return (
             // Link 대신 일반 div를 사용하여 컴파일 오류 해결
-            <div
+            <Link
               key={item.href}
+              href={item.href} 
               className="px-4 py-3 rounded-lg transition-colors font-medium cursor-pointer"
               style={{
                 color: active ? "var(--sb-fg)" : "var(--sb-inactive)",
@@ -72,16 +72,10 @@ export default function Sidebar() {
               }}
             >
               {item.name}
-            </div>
+            </Link>
           );
         })}
       </nav>
-
-      {/* 이전의 색상 설정 UI는 제거되었습니다. */}
-      <div className="mt-8 pt-4 border-t border-gray-700/50 text-center text-xs text-gray-500">
-        색상 설정은 상단 THEME 상수를 직접 수정해주세요.
-      </div>
-
       {/* 호버 스타일은 CSS 변수 사용 */}
       <style jsx>{`
         .sb div:hover {
