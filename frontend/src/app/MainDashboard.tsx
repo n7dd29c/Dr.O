@@ -82,17 +82,20 @@ export default function MainDashboard() {
           <a className="active" href="#" style={{ color: onTopbarText, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             대시보드
           </a>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <Link href="/management" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객관리
-          </a>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          </Link>
+          <Link href="/review" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             전체리뷰관리
-          </a>
+          </Link>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             Dr.O AI
           </a>
           <Link href="/customer" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객 히스토리
+          </Link>
+          <Link href="/keyword" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            키워드 통계
           </Link>
         </nav>
 
