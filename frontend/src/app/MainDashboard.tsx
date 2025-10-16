@@ -42,7 +42,7 @@ const rows = [
 export default function MainDashboard() {
   // ✅ 페이지/탑바 배경색을 상태로 관리 (컬러피커로 즉시 변경)
   const [pageBg, setPageBg] = useState("#ffffff");   // 페이지 전체 배경
-  const [topbarBg, setTopbarBg] = useState("#000000"); // 탑바 + 그리팅 배경
+  const [topbarBg, setTopbarBg] = useState("#fff98eff"); // 탑바 + 그리팅 배경
 
   // 공통 색상 팔레트 (필요 시 조정)
   const textDark = "#0b1220";                 // 밝은 배경에서 본문 텍스트
@@ -51,10 +51,10 @@ export default function MainDashboard() {
   const blue = "#2563EB";
 
   // 탑바/그리팅(어두운 배경)용
-  const onTopbarText = "#ffffff";
-  const onTopbarMuted = "rgba(255,255,255,.7)";
-  const onTopbarBorder = "rgba(255,255,255,.12)";
-  const onTopbarChipBg = "rgba(255,255,255,.08)";
+  const onTopbarText = "#000000ff";
+  const onTopbarMuted = "rgba(2, 2, 2, 0.7)";
+  const onTopbarBorder = "rgba(255, 0, 0, 0.12)";
+  const onTopbarChipBg = "rgba(192, 63, 63, 0.08)";
 
   return (
     <div className="wrap" style={{ minHeight: "100vh", backgroundColor: pageBg, color: textDark, fontFamily: "Inter,system-ui,Arial,sans-serif" }}>
@@ -82,17 +82,20 @@ export default function MainDashboard() {
           <a className="active" href="#" style={{ color: onTopbarText, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             대시보드
           </a>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          <Link href="/management" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객관리
-          </a>
-          <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+          </Link>
+          <Link href="/review" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             전체리뷰관리
-          </a>
+          </Link>
           <a href="#" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             Dr.O AI
           </a>
           <Link href="/customer" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             고객 히스토리
+          </Link>
+          <Link href="/keyword" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            키워드 통계
           </Link>
         </nav>
 
@@ -157,7 +160,7 @@ export default function MainDashboard() {
                 border: `1px solid ${onTopbarBorder}`,
                 borderRadius: 999,
                 padding: "8px 12px",
-                color: "#d1d5db",
+                color: "#000000ff",
               }}
             >
               <span>★</span> <b>4.1</b> 평균 별점
@@ -172,7 +175,7 @@ export default function MainDashboard() {
                 border: `1px solid ${onTopbarBorder}`,
                 borderRadius: 999,
                 padding: "8px 12px",
-                color: "#d1d5db",
+                color: "#000000ff",
               }}
             >
               <span>🗓</span> <b>76%</b> 만족도 비율
@@ -187,7 +190,7 @@ export default function MainDashboard() {
                 border: `1px solid ${onTopbarBorder}`,
                 borderRadius: 999,
                 padding: "8px 12px",
-                color: "#d1d5db",
+                color: "#000000ff",
               }}
             >
               <span>👍🏻</span> <b>2549</b> 누적 긍정 리뷰
@@ -202,7 +205,7 @@ export default function MainDashboard() {
                 border: `1px solid ${onTopbarBorder}`,
                 borderRadius: 999,
                 padding: "8px 12px",
-                color: "#dbd1d2ff",
+                color: "#000000ff",
               }}
             >
               <span>👎🏻</span> <b>633</b> 누적 부정 리뷰
