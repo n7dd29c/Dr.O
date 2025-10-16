@@ -56,12 +56,12 @@ export default function KeywordsAnalysisPage() {
     // --- RENDER ---
     return (
         <div className="p-8 font-sans bg-gray-50 min-h-screen">
-            <h1 className="text-4xl font-extrabold text-slate-800 mb-2 border-b pb-2">키워드 통계 및 AI 분석 리포트</h1>
+            <h1 className="text-3xl font-extrabold text-slate-800 mb-2 border-b pb-2">키워드 통계 및 AI 분석 리포트</h1>
             <p className="text-lg text-slate-500 mb-8">리뷰 데이터를 기반으로 한 AI 분석 보고서입니다. (총 분석 리뷰: {totalReviewCount}건)</p>
 
             {/* A. AI 핵심 개선 리포트 (가장 중요) */}
             <section className="mb-10 p-8 bg-white rounded-xl shadow-2xl border-t-4 border-indigo-600">
-                <h2 className="text-3xl font-bold text-indigo-700 mb-4">📘 {data.aiReport.title}</h2>
+                <h2 className="text-2xl font-bold text-indigo-700 mb-4">📘 {data.aiReport.title}</h2>
                 
                 {/* 리포트 요약 */}
                 <div className="p-4 mb-6 bg-indigo-50 border-l-4 border-indigo-300 rounded-lg">

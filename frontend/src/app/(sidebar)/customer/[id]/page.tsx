@@ -2,7 +2,7 @@
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import styles from './styles.module.css';
-import { mockCustomerDatabase, Customer } from '../_data/mockData';
+import { mockCustomerDatabase, Customer } from '../../../_data/customerData';
 import { notFound } from 'next/navigation';
 
 // --- 메인 페이지 컴포넌트 ---

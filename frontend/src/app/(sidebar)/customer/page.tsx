@@ -33,13 +33,11 @@ const vipCustomers = [
 
 export default function CustomerListPage() {
   return (
-    <div className="bg-slate-100 min-h-screen p-8 font-sans">
-      <header className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-slate-800">우수 고객 히스토리</h1>
-        <a href="/" className="text-blue-500 hover:underline">← 대시보드로 돌아가기</a>
-      </header>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+     <>
+       <header className="flex items-center justify-between mb-8">
+         <h1 className="text-3xl font-bold text-slate-800">우수 고객 히스토리</h1>
+       </header>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {vipCustomers.map(customer => {
           const gradeColor = customer.loyaltyGrade === 'VIP' ? 'bg-purple-600 text-white' : 'bg-amber-500 text-white';
 
@@ -64,6 +62,6 @@ export default function CustomerListPage() {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
