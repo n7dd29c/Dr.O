@@ -1,0 +1,157 @@
+/* 전체 레이아웃 */
+.container {
+  display: flex;
+  background-color: #ffffff; /* 배경은 아주 연한 회색 */
+  min-height: 500vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 2. 오른쪽 메인 콘텐츠 */
+.mainContent {
+  flex-grow: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* 카드들을 묶는 '행' -> 높이 맞추기 핵심! */
+.row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* 각각의 흰색 카드 */
+.card {
+  background-color: #ffffff;
+  color: #212529; /* 카드 안 글자는 검은색 */
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  flex: 1; /* ★★★★★ row 안에서 공간을 균등하게 차지 -> 높이 자동 맞춤! */
+  display: flex;
+  flex-direction: column;
+}
+
+.card h3, .card h4 {
+  margin-top: 0;
+  margin-bottom: 50px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+/* 프로필 카드 */
+.profile {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  margin: 0 auto 16px;
+}
+.vipTag {
+  background-color: #ffd700;
+  color: #333;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 8px;
+}
+.highlight {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+/* 차트 컨테이너 */
+.chartContainer {
+    flex-grow: 1; /* 카드의 남은 공간을 모두 차지하여 차트를 채움 */
+    min-height: 250px; /* 차트의 최소 높이 지정 */
+}
+
+
+/* 태그 공통 컨테이너 (DNA, 키워드) */
+.tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 고객 성향(DNA) 태그 */
+.dnaTag {
+    background-color: #f1f3f5;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* 키워드 분석 태그 (움직이는 효과 포함) */
+.keywordTag {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.keywordTag:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+  border-color: #ffd700;
+  background-color: #fff9db;
+}
+
+/* 주요 구매 메뉴 리스트 */
+.productList {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.productList li {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* 리뷰 히스토리 리스트 */
+.reviewList {
+    overflow-y: auto; /* 내용이 많아지면 스크롤 */
+    max-height: 200px;
+    padding-right: 10px;
+}
+.reviewItem {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+.reviewItem:last-child {
+    border-bottom: none;
+}
+.reviewRating {
+    font-size: 16px;
+    color: #fcc419;
+    grid-column: 1 / 2;
+}
+.reviewDate {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    font-size: 13px;
+    color: #868e96;
+    text-align: right;
+}
+.reviewProduct {
+    grid-column: 1 / 3;
+    font-size: 14px;
+    color: #495057;
+}

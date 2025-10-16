@@ -97,6 +97,9 @@ export default function MainDashboard() {
           <Link href="/keyword" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
             키워드 통계
           </Link>
+          <Link href="/story" style={{ color: onTopbarMuted, textDecoration: "none", padding: "8px 12px", borderRadius: 10 }}>
+            고객 스토리
+          </Link>
         </nav>
 
         <div className="actions" style={{ minWidth: 120, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
