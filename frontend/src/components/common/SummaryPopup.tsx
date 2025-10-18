@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // --- Props 타입 정의 ---
 type Props = {
@@ -63,6 +63,28 @@ export default function SummaryPopup({ isOpen, onClose }: Props) {
     justifyContent: 'center', fontSize: '18px', cursor: 'pointer',
     transition: 'background-color 0.2s, transform 0.2s', zIndex: 10,
   };
+
+  const handleClose = () => {
+    console.log("SummaryPopup 닫기 함수 호출됨"); // 디버깅용
+    onClose();
+  };
+
+  // ESC 키로 팝업 닫기
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
   const arrowButtonStyle: React.CSSProperties = {
     position: 'absolute', top: '50%', transform: 'translateY(-50%)',
     background: PALETTE.cardBg, border: `1px solid ${PALETTE.line}`,
@@ -87,11 +109,11 @@ export default function SummaryPopup({ isOpen, onClose }: Props) {
   `;
 
   return (
-    <div style={modalOverlayStyle}>
+    <div style={modalOverlayStyle} onClick={handleClose}>
       <style>{animationStyles}</style>
-      <div style={modalWrapperStyle}>
+      <div style={modalWrapperStyle} onClick={(e) => e.stopPropagation()}>
         <div style={modalCardStyle}>
-          <button style={closeButtonStyle} onClick={onClose} aria-label="Close modal">&times;</button>
+          <button style={closeButtonStyle} onClick={handleClose} aria-label="Close modal">&times;</button>
 
           <div className={`modal-page ${modalPage !== 1 ? 'hidden-left' : ''}`}>
             <h2 style={{ margin: '0 0 24px 0', textAlign: 'center', fontSize: '24px', fontWeight: 700 }}>✨ 오늘의 리뷰 요약 ✨</h2>
